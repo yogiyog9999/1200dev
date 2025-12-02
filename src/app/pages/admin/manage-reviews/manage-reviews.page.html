@@ -1,0 +1,110 @@
+<ion-content>
+  <div class="main-container">
+
+    <!-- Top Bar -->
+    <div class="search-bar">
+      <h2>Manage Reviews</h2>
+      <ion-button fill="clear" (click)="toggleFilters()">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Filters (default visible) -->
+    <div class="filters" *ngIf="showFilters">
+      <ion-item>
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-input [(ngModel)]="q" placeholder="Contractor Name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="location-outline"></ion-icon>
+        <ion-input [(ngModel)]="postal" placeholder="Zip Code"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="construct-outline"></ion-icon>
+        <ion-select [(ngModel)]="proj" placeholder="Project Type">
+          <ion-select-option *ngFor="let s of services" [value]="s.name">{{ s.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="star-outline"></ion-icon>
+        <ion-select [(ngModel)]="minRating" placeholder="Min Rating">
+          <ion-select-option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}+</ion-select-option>
+        </ion-select>
+      </ion-item>
+	  <ion-item>
+        <ion-icon slot="start" name="star-outline"></ion-icon>
+        <ion-select [(ngModel)]="status" placeholder="Status">
+          <ion-select-option *ngFor="let u of ['published','pending']" [value]="u">{{ u }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" (click)="applyFilters()">Search</ion-button>
+    </div>
+
+    <!-- Active Filters Summary -->
+    <div class="active-filters" *ngIf="!showFilters && (q || postal || proj || minRating)">
+      <ion-chip *ngIf="q">
+        <ion-label>Name: {{ q }}</ion-label>
+        <ion-icon name="close-circle" (click)="q=''; applyFilters()"></ion-icon>
+      </ion-chip>
+
+      <ion-chip *ngIf="postal">
+        <ion-label>Zip: {{ postal }}</ion-label>
+        <ion-icon name="close-circle" (click)="postal=''; applyFilters()"></ion-icon>
+      </ion-chip>
+      <ion-chip *ngIf="status">
+        <ion-label>status: {{ status }}</ion-label>
+        <ion-icon name="close-circle" (click)="status=''; applyFilters()"></ion-icon>
+      </ion-chip>
+      <ion-chip *ngIf="proj">
+        <ion-label>Type: {{ proj }}</ion-label>
+        <ion-icon name="close-circle" (click)="proj=''; applyFilters()"></ion-icon>
+      </ion-chip>
+
+      <ion-chip *ngIf="minRating">
+        <ion-label>Min Rating: {{ minRating }}+</ion-label>
+        <ion-icon name="close-circle" (click)="minRating=null; applyFilters()"></ion-icon>
+      </ion-chip>
+
+      <ion-button fill="clear" size="small" (click)="resetFilters()">Reset Filters</ion-button>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-count" *ngIf="!loading">
+      <p *ngIf="reviews.length > 0">
+        Found {{ reviews.length }} {{ reviews.length === 1 ? 'review' : 'reviews' }}
+      </p>
+      <p *ngIf="reviews.length === 0 && (q || postal || proj || minRating)">
+        No reviews found
+      </p>
+    </div>
+
+    <!-- Loading Spinner -->
+    <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+    <!-- Reviews List -->
+    <ion-list *ngIf="!loading && reviews.length > 0">
+      <ion-card class="review-card" *ngFor="let r of reviews">
+        <ion-card-content>
+          <h4>{{ r.homeowner_name || 'Contractor' }}</h4>
+          <p><strong>Project Type:</strong> {{ r.project_type }}</p>
+          <p><strong>Zip Code:</strong> {{ r.zip || 'N/A' }}</p>
+          <p><strong>Score:</strong> {{ r.avg_score }}/5</p>
+          <p><strong>Status:</strong> {{ r.status }}</p>
+
+          <!-- Extra Buttons -->
+          <div class="buttons">
+            <ion-button color="primary" (click)="togglePublish(r)">
+              {{ r.status === 'published' ? 'Unpublish' : 'Publish' }}
+            </ion-button>
+            <ion-button color="danger" (click)="deleteReview(r.id)">Delete</ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+
+  </div>
+</ion-content>

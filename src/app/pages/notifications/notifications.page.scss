@@ -1,0 +1,57 @@
+/* app.component.scss */
+.bell-btn {
+  position: relative;
+}
+.notification-header{text-align:center}
+.notif-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.7rem;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+
+
+.list-ios{
+  
+  background: #fff;
+}
+
+ion-list.list_notificatons ion-item {
+    --background: #FCE8CF;
+    margin: 15px 0;
+    border-radius: 10px;
+    border: none;
+}
+.sc-ion-label-ios-h{
+  margin: 0;
+  padding: 15px 10px 15px 6px;
+}
+
+.notificaton-date{ 
+ font-size:12px; 
+ color:#474747; 
+ margin-bottom:8px;  
+ display: block;
+ }
+
+.notificaton-heading{ 
+ font-size:15px; 
+ color:#474747; 
+ font-weight:600
+  }
+
+.notificaton-text{ 
+ font-size:12px; 
+ color:#474747
+ }
+
+ .ion-color-danger{
+padding: 4px 10px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  border-radius: 30px;
+ }

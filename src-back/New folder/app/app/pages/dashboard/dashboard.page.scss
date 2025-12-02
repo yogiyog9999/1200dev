@@ -1,0 +1,76 @@
+.dashboard-content {
+  --background: transparent;
+  display: flex;
+  position: relative;
+}
+
+.dashboard-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  z-index: -1;
+}
+
+.dashboard-title {
+  font-weight: bold;
+  color: #fff;
+}
+
+.dashboard-list {
+  margin: 15px;
+  border-radius: 20px;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.dashboard-item {
+  margin: 8px 0;
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+}
+
+.dashboard-item h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  color: #fff;
+}
+
+.dashboard-item p {
+  font-size: 14px;
+  margin: 5px 0 0;
+  color: #e0e0e0;
+}
+
+.empty-state {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+
+.empty-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+.empty-btn {
+  margin-top: 15px;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+  box-shadow: 0 5px 15px rgba(255,75,43,0.4);
+}

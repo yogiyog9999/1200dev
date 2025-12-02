@@ -1,0 +1,99 @@
+<app-global-header></app-global-header>
+
+<ion-content class="review-details-page">
+
+  <!-- Homeowner + Project Info -->
+  <div class="review-header">
+    <h2>{{ homeowner?.name }}</h2>
+    <div class="info-grid">
+      <p><strong>Address:</strong> {{ homeowner?.address }}</p>
+      <p><strong>Zip:</strong> {{ homeowner?.zip }}</p>
+      <p><strong>Project Type:</strong> {{ homeowner?.project_type }}</p>
+      <p><strong>Project Date:</strong>{{ homeowner?.project_date }}</p>
+      <p><strong>Min Rating:</strong> {{ homeowner?.rating_overall }}</p>
+    </div>
+  </div>
+
+  <!-- Summary Box -->
+  <div class="summary-box" *ngIf="reviews.length > 0">
+    <div class="summary-item">
+      <ion-icon name="star" color="warning"></ion-icon>
+      <span>{{ overallAvg }}/5</span>
+    </div>
+    <div class="summary-item">
+      <span>Total Reviews: {{ reviews.length }}</span>
+    </div>
+  </div>
+
+  <!-- Review Cards -->
+  <ion-card *ngFor="let review of reviews" class="review-card">
+    <ion-card-header>
+      <ion-card-title>
+        ⭐ {{ review.avg_score }}/5
+      </ion-card-title>
+      <ion-card-subtitle>
+        Review Description {{ review.project_date | date:'MM/dd/yyyy' }}
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Star breakdown -->
+      <div class="ratings">
+        <p><strong>Payment:</strong> {{ review.rating_payment }}/5</p>
+        <p><strong>Communication:</strong> {{ review.rating_communication }}/5</p>
+        <p><strong>Scope:</strong> {{ review.rating_scope }}/5</p>
+        <p><strong>Change Orders:</strong> {{ review.rating_change_orders }}/5</p>
+        <p><strong>Overall Experience:</strong> {{ review.rating_overall }}/5</p>
+      </div>
+
+      <!-- Review Text -->
+      <div *ngIf="homeowner?.comments" class="review-text">
+        <strong>Reviews</strong>
+        <p>{{ homeowner?.comments }}</p>
+      </div>
+
+      <!-- Attachment -->
+ <div class="attachment" *ngIf="homeowner?.files">
+  <strong>Attachments</strong>
+  <div class="file-list">
+    <div *ngFor="let file of homeowner?.files | jsonParse" class="file-item">
+
+      <!-- If image → show thumbnail -->
+      <ng-container *ngIf="isImage(file); else otherFile">
+        <ion-thumbnail (click)="openPreview(file)">
+          <img [src]="file" alt="Attachment" />
+        </ion-thumbnail>
+      </ng-container>
+
+      <!-- If not image → fallback to icon + name -->
+      <ng-template #otherFile>
+        <ion-icon [name]="getFileIcon(file)"></ion-icon>
+        <a [href]="file" target="_blank">{{ getFileName(file) }}</a>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
+
+<!-- Image Preview Modal -->
+<ion-modal [isOpen]="previewImage !== null" (didDismiss)="closePreview()">
+  <ng-template>
+    <ion-content fullscreen>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="closePreview()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <div class="preview-container">
+        <img [src]="previewImage" alt="Preview" />
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

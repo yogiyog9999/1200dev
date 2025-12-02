@@ -1,0 +1,101 @@
+.consumer-search {
+  --background: #fafafa;
+  padding: 12px;
+}
+
+.search-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.filter-item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  --min-height: 48px;
+  --padding-start: 10px;
+}
+
+.search-btn {
+  --background: #ff5722;
+  --border-radius: 12px;
+  margin-top: 8px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.section-title {
+  margin: 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.review-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  background: #FCE8CF;
+    margin: 15px;
+}
+.hname{color:#EF6229;}
+
+.review-card h4 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.review-card p {
+  margin: 2px 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.review-card .rating {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.review-card .rating ion-icon {
+  font-size: 16px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+
+  ion-searchbar {
+    flex: 1;
+  }
+
+  ion-button {
+    margin-left: 8px;
+  }
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px 12px;
+
+  ion-chip {
+    background: #f2f2f2;
+  }
+
+  ion-button {
+    margin-left: auto;
+    font-size: 0.8rem;
+  }
+}
+.results-count {
+  padding: 6px 16px;
+  font-size: 0.9rem;
+  color: #444;
+
+  p {
+    margin: 4px 0;
+  }
+}

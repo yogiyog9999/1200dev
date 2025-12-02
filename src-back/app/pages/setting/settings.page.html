@@ -1,0 +1,22 @@
+<app-global-header></app-global-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <!-- Hide Name on Reviews -->
+    <!-- settings.page.html -->
+<ion-item>
+  <ion-label>Do not display my name on the reviews</ion-label>
+  <ion-toggle [(ngModel)]="hideNameOnReviews" (ionChange)="updatePreferences()"></ion-toggle>
+</ion-item>
+
+
+    <!-- Allow Push Notifications -->
+    <ion-item>
+      <ion-label>Allow push notifications</ion-label>
+      <ion-toggle
+        [(ngModel)]="allowPushNotifications"
+        (ionChange)="updatePreferences()"
+      ></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,16 @@
+<ion-header><ion-toolbar><ion-title>Submit Review</ion-title></ion-toolbar></ion-header>
+<ion-content><form [formGroup]="form" (ngSubmit)="submit()">
+<ion-item><ion-input label="Homeowner Name" labelPlacement="floating" formControlName="homeowner_name"></ion-input></ion-item>
+<ion-item><ion-input label="Address" labelPlacement="floating" formControlName="address"></ion-input></ion-item>
+<ion-item><ion-select label="Project Type" interface="popover" formControlName="project_type">
+<ion-select-option value="Remodel">Remodel</ion-select-option><ion-select-option value="New Build">New Build</ion-select-option><ion-select-option value="Repair">Repair</ion-select-option>
+</ion-select></ion-item>
+<ion-item><ion-datetime presentation="date" formControlName="project_date"></ion-datetime></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" formControlName="payment_timeliness"><ion-label slot="start">Pay</ion-label><ion-label slot="end">5</ion-label></ion-range></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" formControlName="communication"><ion-label slot="start">Comm</ion-label><ion-label slot="end">5</ion-label></ion-range></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" formControlName="scope_clarity"><ion-label slot="start">Scope</ion-label><ion-label slot="end">5</ion-label></ion-range></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" formControlName="change_order_fairness"><ion-label slot="start">Change</ion-label><ion-label slot="end">5</ion-label></ion-range></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" formControlName="overall"><ion-label slot="start">Overall</ion-label><ion-label slot="end">5</ion-label></ion-range></ion-item>
+<ion-item><ion-textarea label="Comments" labelPlacement="floating" formControlName="comments"></ion-textarea></ion-item>
+<ion-button class="ion-margin-top" type="submit" expand="block">Submit</ion-button>
+</form></ion-content>

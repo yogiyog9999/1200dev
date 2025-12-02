@@ -1,0 +1,195 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="transparent">
+    <ion-title class="page-title">New Review</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="review-content">
+
+  <!-- Background -->
+  <div class="review-background"></div>
+
+  <!-- Glass Card -->
+  <div class="review-card animate__animated animate__fadeInUp">
+
+    <!-- Homeowner Name -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-input label="Homeowner Name" label-placement="floating" [(ngModel)]="homeowner_name"></ion-input>
+    </ion-item>
+
+    <!-- Address -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="home-outline" slot="start"></ion-icon>
+      <ion-input label="Address" label-placement="floating" [(ngModel)]="address"></ion-input>
+    </ion-item>
+
+    <!-- Zip -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="location-outline" slot="start"></ion-icon>
+      <ion-input label="Zip" label-placement="floating" [(ngModel)]="zip"></ion-input>
+    </ion-item>
+
+    <!-- Project Type -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="construct-outline" slot="start"></ion-icon>
+      <ion-input label="Project Type" label-placement="floating" [(ngModel)]="project_type"></ion-input>
+    </ion-item>
+
+    <!-- Project Date -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-input type="date" label="Project Date" label-placement="floating" [(ngModel)]="project_date"></ion-input>
+    </ion-item>
+
+    <!-- Ratings -->
+    <div class="rating-section">
+      <h3>Rate Homeowner</h3>
+
+      <div class="rating-group">
+        <label>Payment Timeliness</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]" 
+                    [name]="rating_payment >= star ? 'star' : 'star-outline'" 
+                    (click)="rating_payment = star"></ion-icon>
+        </div>
+      </div>
+
+      <div class="rating-group">
+        <label>Communication</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]" 
+                    [name]="rating_communication >= star ? 'star' : 'star-outline'" 
+                    (click)="rating_communication = star"></ion-icon>
+        </div>
+      </div>
+
+      <div class="rating-group">
+        <label>Scope Clarity</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]" 
+                    [name]="rating_scope >= star ? 'star' : 'star-outline'" 
+                    (click)="rating_scope = star"></ion-icon>
+        </div>
+      </div>
+
+      <div class="rating-group">
+        <label>Change Order Fairness</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]" 
+                    [name]="rating_change_orders >= star ? 'star' : 'star-outline'" 
+                    (click)="rating_change_orders = star"></ion-icon>
+        </div>
+      </div>
+
+      <div class="rating-group">
+        <label>Overall Experience</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]" 
+                    [name]="rating_overall >= star ? 'star' : 'star-outline'" 
+                    (click)="rating_overall = star"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+      <ion-textarea label="Comments" label-placement="floating" autoGrow="true" [(ngModel)]="comments"></ion-textarea>
+    </ion-item>
+
+    <!-- File Upload -->
+    <div class="upload-section">
+      <ion-button expand="block" fill="outline" class="upload-btn">
+        <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+        Upload Files
+        <input type="file" (change)="onFileChange($event)" multiple hidden />
+      </ion-button>
+    </div>
+
+    <!-- Submit Button -->
+    <ion-button expand="block" (click)="submit()" class="submit-btn">
+      <ion-icon name="send-outline" slot="start"></ion-icon>
+      Submit Review
+    </ion-button>
+
+    <!-- Error -->
+    <ion-text color="danger" *ngIf="error" class="error-text">{{ error }}</ion-text>
+  </div>
+</ion-content>
+
+<style>
+.review-content {
+  --background: transparent;
+
+  .review-background {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, #f9f9f9, #ececec);
+    z-index: -1;
+  }
+
+  .review-card {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .input-item {
+    margin-bottom: 12px;
+  }
+
+  .rating-section {
+    margin: 20px 0;
+
+    h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .rating-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      label {
+        flex: 1;
+        font-size: 14px;
+      }
+
+      .stars {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        ion-icon {
+          font-size: 22px;
+          color: #FFD700;
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .upload-btn {
+    margin: 12px 0;
+  }
+
+  .submit-btn {
+    --background: #333;
+    color: #fff;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .error-text {
+    margin-top: 8px;
+    text-align: center;
+    display: block;
+  }
+}
+
+</style>

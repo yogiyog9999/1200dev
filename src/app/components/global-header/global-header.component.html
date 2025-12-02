@@ -1,0 +1,41 @@
+<ion-header class="custom-header ion-no-border">
+  <ion-toolbar>
+
+    <!-- Left Back Button -->
+    <ion-buttons slot="start">
+  <ion-button (click)="goBack()">
+    <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+  </ion-button>
+</ion-buttons>
+
+    <!-- Center Title -->
+   <ion-title class="header-title">
+      <img src="assets/logo.png" alt="App Logo" class="logo-img" />
+    </ion-title>
+	
+    <!-- Right Icons -->
+    <ion-buttons slot="end">
+      <!-- Notifications -->
+      <ion-button fill="clear" class="icon-btn" (click)="goToNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge *ngIf="unreadCount > 0" color="danger" class="notif-badge">
+          {{ unreadCount }}
+        </ion-badge>
+      </ion-button>
+     <ion-button fill="clear" class="icon-btn" (click)="goToHelp()">
+  <ion-icon name="help-circle-outline"></ion-icon>
+</ion-button>
+
+      <!-- Profile -->
+      <ion-button fill="clear" class="icon-btn" (click)="goToSettings()">
+  <ion-avatar class="profile-avatar">
+    <img [src]="profileImageUrl || 'assets/placeholder-avatar.png'" alt="Profile" />
+  </ion-avatar>
+</ion-button>
+<ion-button fill="clear" class="icon-btn" (click)="logout()">
+    <ion-icon name="log-out-outline"></ion-icon>
+  </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>

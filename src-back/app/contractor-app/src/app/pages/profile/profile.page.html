@@ -1,0 +1,48 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Contractor Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="save()">
+    <ion-item>
+      <ion-label position="floating">Business Name</ion-label>
+      <ion-input [(ngModel)]="form.business_name" name="business_name" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Trade</ion-label>
+      <ion-input [(ngModel)]="form.trade" name="trade" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">City</ion-label>
+      <ion-input [(ngModel)]="form.city" name="city" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">State</ion-label>
+      <ion-input [(ngModel)]="form.state" name="state" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Country</ion-label>
+      <ion-input [(ngModel)]="form.country" name="country" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">License #</ion-label>
+      <ion-input [(ngModel)]="form.license_number" name="license_number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Profile Image</ion-label>
+      <input type="file" (change)="uploadImage($event)" />
+    </ion-item>
+
+    <div *ngIf="form.profile_image_url" class="preview">
+      <img [src]="form.profile_image_url" alt="profile" style="max-width: 120px; border-radius: 8px;" />
+    </div>
+
+    <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+    <ion-text color="success" *ngIf="success">{{ success }}</ion-text>
+
+    <ion-button expand="block" type="submit" [disabled]="loading">Save Profile</ion-button>
+  </form>
+</ion-content>

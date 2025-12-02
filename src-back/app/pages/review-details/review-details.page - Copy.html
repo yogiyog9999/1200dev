@@ -1,0 +1,95 @@
+<app-global-header></app-global-header>
+<ion-content>
+  <!-- Top Section: Homeowner Info -->
+  <ion-card *ngIf="homeowner">
+    <ion-card-header>
+      <ion-card-title>{{ homeowner.name }}</ion-card-title>
+      <ion-card-subtitle>{{ homeowner.address }}</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+<ion-card *ngIf="reviews.length > 0">
+    <ion-card-header>
+      <ion-card-title>Review Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        ⭐ <strong>Average Score:</strong> {{ overallAvg }}/5
+      </p>
+      <p>
+        📊 <strong>Total Reviews:</strong> {{ reviews.length }}
+      </p>
+    </ion-card-content>
+  </ion-card>
+  <ion-list>
+    <ion-card *ngFor="let review of reviews" class="review-card">
+      <ion-item lines="none">
+        <!-- Contractor Avatar -->
+        <ion-avatar slot="start">
+          <img [src]="review.profile_image_url || 'assets/logo.png'" />
+        </ion-avatar>
+
+        <!-- Contractor Name + Project Info -->
+        <ion-label>
+         <h2>
+  <a [routerLink]="['/contractor', review.contractor_id]">
+  <ng-container *ngIf="!(hideNameOnReviews && review.contractor_id === currentUserId); else anonymousName">
+    {{ review.first_name }} {{ review.last_name }}
+  </ng-container>
+  <ng-template #anonymousName>
+    Anonymous
+  </ng-template>
+</a>
+
+</h2>
+
+          <p>{{ review.project_type }} • {{ review.project_date | date }}</p>
+        </ion-label>
+
+        <!-- Avg Score Badge -->
+        <ion-badge color="warning">{{ review.avg_score }}/5</ion-badge>
+      </ion-item>
+
+      <!-- Ratings -->
+      <ion-card-content>
+        <div class="ratings">
+          <div>
+            <strong>Payment:</strong>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <ion-icon [name]="star <= review.rating_payment ? 'star' : 'star-outline'" color="warning"></ion-icon>
+            </ng-container>
+          </div>
+          <div>
+            <strong>Communication:</strong>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <ion-icon [name]="star <= review.rating_communication ? 'star' : 'star-outline'" color="warning"></ion-icon>
+            </ng-container>
+          </div>
+          <div>
+            <strong>Scope:</strong>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <ion-icon [name]="star <= review.rating_scope ? 'star' : 'star-outline'" color="warning"></ion-icon>
+            </ng-container>
+          </div>
+          <div>
+            <strong>Change Orders:</strong>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <ion-icon [name]="star <= review.rating_change_orders ? 'star' : 'star-outline'" color="warning"></ion-icon>
+            </ng-container>
+          </div>
+          <div>
+            <strong>Overall:</strong>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <ion-icon [name]="star <= review.rating_overall ? 'star' : 'star-outline'" color="warning"></ion-icon>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Comments -->
+        <div *ngIf="review.comments" class="comments">
+          <strong>Comments:</strong>
+          <p>{{ review.comments }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

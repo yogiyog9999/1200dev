@@ -1,0 +1,82 @@
+ion-content.auth-content {
+  --background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+}
+
+.logo-section {
+  margin-bottom: 10px;
+}
+
+.app-logo {
+  font-size: 28px;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+}
+
+.app-logo .highlight {
+  color: #e85a2a;
+}
+
+.auth-container-sign {
+    display: flex
+;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    height: 100%;
+}
+.welcome-text h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.welcome-text .subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.auth-container {
+    margin: 0 20px;
+}
+
+.input-item {
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.terms-item {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.terms-item a {
+  color: #e85a2a;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.register-btn {
+  margin-top: 20px;
+  --background: #e85a2a;
+  --border-radius: 10px;
+  font-weight: bold;
+  text-transform: none;
+}
+
+.switch-text {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch-text a {
+  font-weight: 600;
+  color: #e85a2a;
+}

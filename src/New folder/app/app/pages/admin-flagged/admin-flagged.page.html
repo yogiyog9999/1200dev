@@ -1,0 +1,16 @@
+<ion-header><ion-toolbar color="primary"><ion-title>Flagged Reviews</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+  <ion-list *ngIf="flagged.length; else none">
+    <ion-item *ngFor="let f of flagged">
+      <ion-label>
+        <h2>{{f.contractor_name}} → {{f.homeowner_name}}</h2>
+        <p>{{f.project_type}} — Avg {{f.avg_score}} — Auto: {{f.auto}}</p>
+        <p>Reason: {{f.reason}}</p>
+      </ion-label>
+      <ion-button size="small" (click)="publish(f.review_id)">Publish</ion-button>
+      <ion-button size="small" color="danger" (click)="remove(f.review_id)">Remove</ion-button>
+    </ion-item>
+  </ion-list>
+  <ng-template #none><div class="center" style="height:60vh;">No flagged reviews 🎉</div></ng-template>
+  <ion-text color="danger" *ngIf="error">{{error}}</ion-text>
+</ion-content>

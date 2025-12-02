@@ -1,0 +1,120 @@
+<app-global-header></app-global-header>
+
+<ion-content>
+
+  <!-- Search bar with filter icon -->
+  <div class="search-bar">
+    <ion-searchbar
+      placeholder="Search consumers..."
+      [(ngModel)]="q"
+      (ionInput)="onSearch()"
+      debounce="500">
+    </ion-searchbar>
+
+    <ion-button fill="clear" (click)="toggleFilters()">
+      <ion-icon name="options-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Active Filters Summary -->
+  <div class="active-filters" *ngIf="postal || proj || minRating">
+    <ion-chip *ngIf="postal">
+      <ion-label>Zip: {{ postal }}</ion-label>
+      <ion-icon name="close-circle" (click)="postal=''; applyFilters()"></ion-icon>
+    </ion-chip>
+    <ion-chip *ngIf="proj">
+      <ion-label>Type: {{ proj }}</ion-label>
+      <ion-icon name="close-circle" (click)="proj=''; applyFilters()"></ion-icon>
+    </ion-chip>
+    <ion-chip *ngIf="minRating">
+      <ion-label>Min Rating: {{ minRating }}+</ion-label>
+      <ion-icon name="close-circle" (click)="minRating=null; applyFilters()"></ion-icon>
+    </ion-chip>
+
+    <!-- Reset All -->
+    <ion-button fill="clear" size="small" (click)="resetFilters()">
+      Reset Filters
+    </ion-button>
+  </div>
+
+  <!-- Results Count -->
+  <div class="results-count" *ngIf="!loading">
+    <p *ngIf="results.length > 0">
+      Found {{ results.length }} {{ results.length === 1 ? 'result' : 'results' }}
+      <span *ngIf="q">for "<strong>{{ q }}</strong>"</span>
+    </p>
+    <p *ngIf="results.length === 0 && (q || postal || proj || minRating)">
+      No results found
+      <span *ngIf="q">for "<strong>{{ q }}</strong>"</span>
+    </p>
+  </div>
+
+  <!-- Reviews -->
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+  <ion-list *ngIf="!loading && results.length > 0">
+    <ion-card class="review-card"
+      *ngFor="let r of results"
+      (click)="openReviewDetails(r.id)">
+      <ion-card-content>
+        <h4 class="hname">{{ r.homeowner_name || 'Homeowner' }}</h4>
+        <p><strong>Project Type: {{ r.project_type }}</strong></p>
+        <p>Latest review posted on {{ r.project_date | date:'MMM d, y' }}</p>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]"
+            [name]="star <= r.avg_score ? 'star' :
+                   (star - 0.5 <= r.avg_score ? 'star-half' : 'star-outline')"
+            color="warning">
+          </ion-icon>
+          <span>{{ r.avg_score }}/5</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <!-- Filters Modal (same as before) -->
+  <ion-modal [isOpen]="showFilters" (didDismiss)="showFilters=false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Search Filters</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showFilters=false">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding filter-content">
+        <ion-item>
+          <ion-icon slot="start" name="location-outline"></ion-icon>
+          <ion-input [(ngModel)]="postal" placeholder="Enter zipcode"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="construct-outline"></ion-icon>
+          <ion-select [(ngModel)]="proj" placeholder="Project Type">
+            <ion-select-option *ngFor="let s of services" [value]="s.name">
+              {{ s.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="star-outline"></ion-icon>
+          <ion-select [(ngModel)]="minRating" placeholder="Min Rating">
+            <ion-select-option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}+</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <div class="filter-actions">
+          <ion-button expand="block" (click)="applyFilters()">
+            Apply Filters
+          </ion-button>
+          <ion-button expand="block" fill="outline" color="medium" (click)="resetFilters()">
+            Reset Filters
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

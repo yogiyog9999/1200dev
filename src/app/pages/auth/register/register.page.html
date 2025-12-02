@@ -1,0 +1,165 @@
+<ion-content class="auth-content">
+  <ion-header class="custom-header ion-no-border">
+    <ion-toolbar>
+      <!-- Center Title -->
+      <ion-title class="header-title">
+        <img src="assets/logo.png" alt="App Logo" class="logo-img" />
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="auth-container-sign main-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <h1 class="app-logo"><span class="highlight">D</span> List</h1>
+    </div>
+
+    <!-- Title -->
+    <div class="welcome-text">
+      <h2>Service Provider Sign up</h2>
+      <p class="subtitle">Create your free account</p>
+    </div>
+
+    <!-- Register Form -->
+    <div class="auth-container">
+      <form (ngSubmit)="register()">
+
+        <!-- First Name -->
+        <ion-item class="input-item" lines="none">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input type="text" [(ngModel)]="firstName" name="firstName" placeholder="First Name*" required></ion-input>
+        </ion-item>
+
+        <!-- Last Name -->
+        <ion-item class="input-item" lines="none">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Last Name*" required></ion-input>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item class="input-item" lines="none">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input type="email" [(ngModel)]="email" name="email" placeholder="Email*" required></ion-input>
+        </ion-item>
+
+        <!-- Password -->
+        <!-- Password Field -->
+<ion-item class="input-item" lines="none">
+  <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+
+  <ion-input
+    [type]="showPassword ? 'text' : 'password'"
+    [(ngModel)]="password"
+    (ionInput)="checkPasswordStrength()"
+    name="password"
+    placeholder="Password"
+    required>
+  </ion-input>
+
+  <!-- Generate Password Button -->
+  <ion-button
+    fill="clear"
+    size="small"
+    slot="end"
+    class="generate-btn"
+    (click)="generatePassword()">
+    <ion-icon name="refresh-outline"></ion-icon>
+  </ion-button>
+
+  <!-- Eye Toggle -->
+  <ion-icon
+    [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+    slot="end"
+    class="eye-icon"
+    (click)="togglePassword('password')">
+  </ion-icon>
+</ion-item>
+
+
+
+        <!-- Password Strength Meter -->
+        <div class="password-strength-container" *ngIf="password">
+          <div class="password-strength-bar">
+            <div [class]="strengthClass" [style.width.%]="strengthPercent"></div>
+          </div>
+          <ion-text [color]="strengthColor" class="strength-text">
+            {{ strengthText }}
+          </ion-text>
+        </div>
+
+        <!-- Password Hints -->
+    <!-- Password Hints -->
+<!-- Password Hints -->
+<div class="password-hints" *ngIf="password && !allPasswordHintsPassed()">
+  <div class="hint-item" [class.valid]="password.length >= 12">
+    <ion-icon [name]="password.length >= 12 ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+    <span>Minimum 12 characters</span>
+  </div>
+
+  <div class="hint-item" [class.valid]="uppercaseRegex.test(password)">
+    <ion-icon [name]="uppercaseRegex.test(password) ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+    <span>At least one uppercase letter</span>
+  </div>
+
+  <div class="hint-item" [class.valid]="lowercaseRegex.test(password)">
+    <ion-icon [name]="lowercaseRegex.test(password) ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+    <span>At least one lowercase letter</span>
+  </div>
+
+  <div class="hint-item" [class.valid]="numberRegex.test(password)">
+    <ion-icon [name]="numberRegex.test(password) ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+    <span>At least one number</span>
+  </div>
+
+  <div class="hint-item" [class.valid]="specialCharRegex.test(password)">
+    <ion-icon [name]="specialCharRegex.test(password) ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+    <span>At least one special character</span>
+  </div>
+</div>
+
+
+
+
+        <!-- Confirm Password -->
+        <ion-item class="input-item" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            required>
+          </ion-input>
+          <ion-icon
+            [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+            slot="end"
+            (click)="togglePassword('confirm')">
+          </ion-icon>
+        </ion-item>
+
+        <!-- Terms Checkbox -->
+        <ion-item lines="none" class="terms-item">
+          <ion-checkbox slot="start" [(ngModel)]="acceptTerms" name="acceptTerms" required></ion-checkbox>
+          <ion-label>
+            I agree to <a href="https://dlistapp.net/terms-and-conditions.html" target="_blank">terms and conditions*</a>
+          </ion-label>
+        </ion-item>
+
+        <!-- Error -->
+        <ion-text color="danger" *ngIf="error" class="error-text">{{ error }}</ion-text>
+
+        <!-- Submit Button -->
+        <ion-button expand="block" type="submit" [disabled]="loading || strengthPercent < 100" class="register-btn">
+          <ion-spinner *ngIf="loading" slot="start"></ion-spinner>
+          Create Account
+        </ion-button>
+
+        <!-- Switch to Login -->
+        <p class="switch-text">
+          Already have an account? <a (click)="gotoLogin()">Login</a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+</ion-content>

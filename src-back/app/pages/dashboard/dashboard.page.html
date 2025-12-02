@@ -1,0 +1,74 @@
+<ion-content class="dashboard-page">
+  <app-global-header></app-global-header>
+
+  <div class="dashboard-section">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h2>Dashboard</h2>
+      <h3 class="welcome-text">Welcome {{ contractor?.name || 'John Smith' }}</h3>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-grid">
+      <button class="action-btn" routerLink="/tabs/profile">
+        <ion-icon name="create-outline"></ion-icon>
+        Edit Profile
+      </button>
+      <button class="action-btn" routerLink="/tabs/myreview">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        My Reviews
+      </button>
+      <button class="action-btn" routerLink="/tabs/review/new">
+        <ion-icon name="pencil-outline"></ion-icon>
+        Write Review
+      </button>
+      <button class="action-btn" routerLink="/tabs/homeowners">
+        <ion-icon name="home-outline"></ion-icon>
+        Consumers
+      </button>
+    </div>
+
+    <!-- Rating Overview -->
+    <div class="block-card ">
+      <h3 class="section-title">Rating Overview</h3>
+      <div *ngIf="isLoading; else ratingContent" class="flex-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <ng-template #ratingContent>
+        <p>
+          Overall rating by you 
+           <ion-icon name="star" color="warning"></ion-icon>
+          <strong> {{ avgRating || '0.0' }}/5</strong>
+        </p>
+        <p>Total reviews posted <strong> {{ totalReviews || 0 }}</strong> Reviews</p>
+      </ng-template>
+    </div>
+
+    <!-- Latest Reviews -->
+    <div class="block-card latest_review">
+      <h3 class="section-title">Latest Reviews</h3>
+      <div *ngIf="isLoading; else reviewsContent" class="flex-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <ng-template #reviewsContent>
+        <div 
+          class="review-card" 
+          *ngFor="let review of reviewedHomeowners"
+          (click)="openReviewDetails(review.name)"
+        >
+          <h4>{{ review.name }}</h4>
+          <p>Project Type: {{ review.projectType }}</p>
+          <p>Latest review posted on {{ review.projectDate }}</p>
+          <div class="stars">
+            <ion-icon *ngFor="let s of [1,2,3,4,5]" 
+                      [name]="s <= review.avgScore ? 'star' : 
+                             (s - 0.5 <= review.avgScore ? 'star-half' : 'star-outline')"
+                      color="warning">
+            </ion-icon>
+            <span>{{ review.avgScore }}/5</span>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

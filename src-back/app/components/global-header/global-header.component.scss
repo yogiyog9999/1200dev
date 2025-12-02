@@ -1,0 +1,52 @@
+
+.custom-header {
+  --background: #1c1c1c; // dark background like your screenshot
+  color: white;text-align: center;
+
+  .header-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 500;
+
+    .logo-d {
+      font-family: 'Cursive', serif;
+      color: #e85c0d; // orange
+      font-style: italic;
+      margin-right: 2px;
+    }
+
+    .logo-list {
+      font-family: 'Cursive', serif;
+      color: #ffffff;
+    }
+  }
+
+  .icon-btn {
+    position: relative;
+    color: white;
+  }
+
+  .notif-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+    border-radius: 50%;
+  }
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  --border-radius: 50%;
+
+  img {
+    object-fit: cover;
+  }
+}

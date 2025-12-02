@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="transparent">
+    <ion-title class="dashboard-title">Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/review/new">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        New Review
+      </ion-button>
+      <ion-button routerLink="/homeowners">
+        <ion-icon name="search-outline" slot="start"></ion-icon>
+        Search
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="dashboard-content">
+
+  <!-- Background -->
+  <div class="dashboard-background"></div>
+
+  <!-- Reviews List -->
+  <ion-list *ngIf="reviews.length; else empty" class="dashboard-list animate__animated animate__fadeInUp">
+    <ion-item *ngFor="let r of reviews" class="dashboard-item" lines="none">
+      <ion-label>
+        <h2>{{ r.homeowners?.name || 'Homeowner' }} — {{ r.project_type }}</h2>
+        <p>⭐ Average: {{ r.avg_score }} — 📝 Status: {{ r.status }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Empty State -->
+  <ng-template #empty>
+    <div class="empty-state animate__animated animate__fadeIn">
+      <ion-icon name="document-text-outline" class="empty-icon"></ion-icon>
+      <h2>No reviews yet</h2>
+      <ion-button routerLink="/review/new" class="empty-btn">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Create your first review
+      </ion-button>
+    </div>
+  </ng-template>
+
+</ion-content>

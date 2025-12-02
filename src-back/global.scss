@@ -1,0 +1,250 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+//@import "@ionic/angular/css/palettes/dark.system.css";
+/* ================================
+   Global Material-Style Theme
+   ================================ */
+/* Global form field text indent */
+ion-input,
+ion-textarea,
+ion-select,
+ion-searchbar,
+input,
+textarea,
+select {
+  text-indent: 0.75rem; /* adjust value as needed */
+}
+
+:root {
+  --ion-font-family: 'Inter', 'Roboto', sans-serif;
+
+  /* Primary */
+  --ion-color-primary: #4a90e2;
+  --ion-color-primary-rgb: 74, 144, 226;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #3b7ac2;
+  --ion-color-primary-tint: #62a1e8;
+
+  /* Secondary */
+  --ion-color-secondary: #ff6b6b;
+  --ion-color-secondary-rgb: 255, 107, 107;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-shade: #e85b5b;
+  --ion-color-secondary-tint: #ff8080;
+
+  /* Accent / Tertiary */
+  --ion-color-tertiary: #50e3c2;
+
+  /* Success / Warning / Danger */
+  --ion-color-success: #4caf50;
+  --ion-color-warning: #f9a825;
+  --ion-color-danger: #e53935;
+
+  /* Backgrounds */
+  --ion-background-color: #f4f7fb;
+  --ion-card-background: #ffffff;
+
+  /* Text */
+  --ion-text-color: #2c3e50;
+  --ion-text-light: #6c7a89;
+
+  /* Borders */
+  --ion-border-color: #e0e6ed;
+
+  /* Gradient */
+  --app-gradient: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+}
+
+/* Global Body */
+ion-content {
+  --background: var(--ion-background-color);
+  font-family: var(--ion-font-family);
+  color: var(--ion-text-color);
+}
+
+/* Toolbar */
+ion-toolbar {
+  --background: #1c1c1c;
+  --color: #fff;
+  font-weight: 600;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  padding-top: 32px !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+/* Cards */
+ion-card {
+  --background: var(--ion-card-background);
+  --border-radius: 14px;
+  border: 1px solid var(--ion-border-color);
+  margin: 14px 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  transition: transform 0.2s ease;
+}
+ion-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Items */
+ion-item {
+  --background: #fff;
+  --border-radius: 10px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  border: 1px solid var(--ion-border-color);
+  margin: 8px 0;
+  font-size: 15px;
+  --color: var(--ion-text-color);
+}
+
+/* Inputs */
+ion-input, ion-select, ion-textarea {
+  border: 1px solid var(--ion-border-color);
+  border-radius: 10px;
+  background: #fff;
+  margin: 8px 0;
+  font-size: 15px;
+  padding: 10px;
+  --color: var(--ion-text-color);
+}
+
+/* Placeholder Fix */
+ion-input::part(native)::placeholder,
+ion-textarea::part(native)::placeholder {
+  color: var(--ion-text-light);
+  opacity: 1;
+}
+
+/* Buttons */
+ion-button {
+  --border-radius: 12px;
+  font-weight: 600;
+  text-transform: none;
+  height: 48px;
+  margin-top: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+ion-button[color="primary"] {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-tint));
+  --background-activated: var(--ion-color-primary-shade);
+  --border: 1px solid var(--ion-color-primary-shade);
+}
+
+ion-button[color="secondary"] {
+  --background: linear-gradient(135deg, var(--ion-color-secondary), var(--ion-color-secondary-tint));
+  --background-activated: var(--ion-color-secondary-shade);
+  --border: 1px solid var(--ion-color-secondary-shade);
+}
+
+/* Lists */
+ion-list {
+  background: transparent;
+}
+
+ion-item-divider {
+  font-weight: 600;
+  color: var(--ion-text-color);
+  background: #eef2f7;
+  border-bottom: 1px solid var(--ion-border-color);
+}
+
+/* Review Card */
+.review-card {
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--ion-border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin: 12px 0;
+}
+
+.review-card h2 {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--ion-color-primary);
+}
+
+.review-card p {
+  font-size: 14px;
+  color: var(--ion-text-light);
+  margin: 4px 0;
+}
+
+
+
+
+
+.bottom-nav {
+  ion-toolbar {
+    --background: #f15a29;
+    padding: 5px 0;
+  }
+
+  ion-col {
+    color: #fff;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 22px;
+      color: #fff;
+    }
+
+    div {
+      font-size: 12px;
+      margin-top: 3px;
+      color: #fff;
+    }
+  }
+
+  /* Active Tab */
+  .active {
+    ion-icon {
+      color: #ffde59; // highlight color (yellow)
+    }
+    div {
+      color: #ffde59;
+      font-weight: 600;
+    }
+  }
+}

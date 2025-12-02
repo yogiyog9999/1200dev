@@ -1,0 +1,13 @@
+<ion-header><ion-toolbar><ion-title>Search Homeowners</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+<ion-item><ion-input placeholder="Name" [(ngModel)]="filters.name"></ion-input></ion-item>
+<ion-item><ion-input placeholder="ZIP" [(ngModel)]="filters.zip"></ion-input></ion-item>
+<ion-item><ion-select placeholder="Project Type" [(ngModel)]="filters.project_type">
+<ion-select-option value="">Any</ion-select-option><ion-select-option value="Remodel">Remodel</ion-select-option>
+<ion-select-option value="New Build">New Build</ion-select-option><ion-select-option value="Repair">Repair</ion-select-option></ion-select></ion-item>
+<ion-item><ion-range min="1" max="5" step="1" [(ngModel)]="filters.min_rating"><ion-label slot="start">Min ★</ion-label></ion-range></ion-item>
+<ion-button expand="block" (click)="search()">Search</ion-button>
+<ion-list><ion-item *ngFor="let h of results" [routerLink]="['/review', h.id]"><ion-label>
+<h2>{{h.homeowner_name}} — {{h.project_type}}</h2><p>{{h.address}}</p><p>Overall: {{h.overall}} ★</p>
+</ion-label></ion-item></ion-list>
+</ion-content>

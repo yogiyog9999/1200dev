@@ -1,0 +1,13 @@
+<ion-header><ion-toolbar>
+<ion-buttons slot="start"><ion-back-button defaultHref="/dashboard"></ion-back-button></ion-buttons>
+<ion-title>Review</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding"><ng-container *ngIf="review">
+<h2>{{review.homeowner_name}}</h2><p>{{review.address}}</p>
+<p>Project: {{review.project_type}} on {{review.project_date | date}}</p>
+<ion-list>
+<ion-item>Payment Timeliness: {{review.payment_timeliness}} ★</ion-item>
+<ion-item>Communication: {{review.communication}} ★</ion-item>
+<ion-item>Scope Clarity: {{review.scope_clarity}} ★</ion-item>
+<ion-item>Change Order Fairness: {{review.change_order_fairness}} ★</ion-item>
+<ion-item>Overall: {{review.overall}} ★</ion-item>
+</ion-list><p>{{review.comments}}</p></ng-container></ion-content>

@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar><ion-title>Resend Verification Email</ion-title></ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="resend()">
+    <ion-item>
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+    </ion-item>
+    <ion-button expand="block" type="submit" [disabled]="loading">
+      {{ loading ? 'Sending…' : 'Resend Email' }}
+    </ion-button>
+    <ion-text color="success" *ngIf="info">{{ info }}</ion-text>
+    <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+  </form>
+</ion-content>

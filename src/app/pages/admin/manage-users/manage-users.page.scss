@@ -1,0 +1,129 @@
+.dashboard-page {
+  --background: #fff;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin: 0 0 20px 0;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .welcome-text {
+    color: #e65c2e; // same orange-red as screenshot
+    font-weight: 600;
+    margin: 4px 0 0;
+
+  }
+}
+
+/* Quick Actions */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  /*margin: 20px 12px;*/
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #241F23;   // black background like screenshot
+    color: #fff;           // white text
+    font-weight: 600;
+    padding: 14px 15px;
+    border-radius: 10px;
+    border: none;
+    font-size:14px;
+
+    ion-icon {
+      color: #ef6229;   // white icons
+      font-size: 18px;
+    }
+  }
+}
+
+/* Card-like blocks (Rating + Reviews) */
+.block-card {
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding:18px 24px;
+  margin: 20px 0px;
+}
+
+/* Section titles inside blocks */
+.section-title {
+  margin: 0 0 0px;
+  /*font-size: 1rem;*/
+  font-weight: 600;
+  padding-bottom:8px;
+}
+
+/* Rating Overview */
+.rating-overview p,
+.block-card p {
+font-size: 14px;
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+/* Latest Reviews */
+.review-card {
+  background: #FCE8CF; // peach block
+  padding: 0px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+
+  h5 {
+    margin: 0;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #e65c2e; // orange like screenshot
+  }
+
+  p {
+    margin: 3px 0;
+    font-size: 0.85rem;
+  }
+
+  .stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+
+    ion-icon {
+      font-size: 16px;
+    }
+
+    span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #444;
+    }
+  }
+}
+
+.block-card.latest_review {
+    background: #FCE8CF;
+    padding-top:30px;
+}
+
+.block-card.latest_review .review-card {
+    border: 0px;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(78, 74, 74, 0.5);
+    line-height: 1.8;
+    border-radius: 0px;
+    padding-bottom:20px;
+    margin:10px 0 20px;
+}
+.block-card.latest_review .review-card:last-child{
+  border-bottom:none;
+  padding-bottom:0;
+  margin-bottom:10px;
+}

@@ -1,0 +1,103 @@
+
+<ion-content class="profile-page">
+<app-global-header></app-global-header>
+  <!-- Loader -->
+  <ng-container *ngIf="isLoading; else profileFormContent">
+    <ion-spinner name="crescent" class="center-spinner"></ion-spinner>
+  </ng-container>
+
+  <ng-template #profileFormContent>
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <!-- Top Header -->
+      <div class="profile-card-header">
+        <h3>Service Provider Profile</h3>
+      </div>
+
+      <!-- Avatar + Name Row -->
+      <div class="profile-info">
+        <div class="avatar-wrapper">
+          <ion-avatar class="avatar">
+            <img [src]="form.profile_image_url || 'assets/placeholder-avatar.png'" />
+          </ion-avatar>
+          <!-- Hidden File Input -->
+          <input type="file" #fileInput hidden (change)="uploadImage($event)" />
+          <!-- Edit Icon Overlay -->
+          <ion-icon
+            name="pencil-outline"
+            class="edit-avatar-icon"
+            (click)="fileInput.click()"
+          ></ion-icon>
+        </div>
+        <div class="profile-name">
+          <h2 class="profile-title">
+            {{ form.first_name }} {{ form.last_name }}
+          </h2>
+        </div>
+      </div>
+
+</div>
+
+
+    <!-- Form -->
+    <form (ngSubmit)="save()">
+      <ion-list lines="none" class="profile-form">
+         <!-- First Name -->
+        <ion-item class="input-item">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input placeholder="First Name" [(ngModel)]="form.first_name" name="first_name"></ion-input>
+        </ion-item>
+
+        <!-- Last Name -->
+        <ion-item class="input-item">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Last Name" [(ngModel)]="form.last_name" name="last_name"></ion-input>
+        </ion-item>
+
+
+        <ion-item class="input-item">
+          <ion-icon name="business-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Business Name" [(ngModel)]="form.business_name" name="business_name"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-icon name="construct-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Trade" [(ngModel)]="form.trade" name="trade"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-icon name="location-outline" slot="start"></ion-icon>
+          <ion-input placeholder="City" [(ngModel)]="form.city" name="city"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-icon name="map-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Zip" [(ngModel)]="form.zip" name="zip"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-icon name="flag-outline" slot="start"></ion-icon>
+          <ion-input placeholder="State" [(ngModel)]="form.state" name="state"></ion-input>
+        </ion-item>
+        <ion-item class="input-item">
+          <ion-icon name="flag-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Country" [(ngModel)]="form.country" name="country"></ion-input>
+        </ion-item>
+
+		
+        <ion-item class="input-item">
+          <ion-icon name="id-card-outline" slot="start"></ion-icon>
+          <ion-input placeholder="License#" [(ngModel)]="form.license_number" name="license_number"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <ion-button expand="block" type="submit" class="save-btn">Save Profile</ion-button>
+
+      <ion-button  expand="block" fill="solid" color="dark" class="secondary-btn" routerLink="/tabs/setting">Edit Preferences</ion-button>
+
+<ion-button expand="block" fill="solid" color="dark" class="secondary-btn" routerLink="/tabs/notifications">Notifications</ion-button>
+
+    </form>
+  </ng-template>
+</ion-content>

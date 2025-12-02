@@ -1,0 +1,84 @@
+/* tabs.page.scss */
+
+ion-tab-bar.custom-tab-bar {
+--background: #f15a29;
+  --color: #fff;
+  --color-selected: #ffde59;
+             
+  position: relative;
+   
+}
+
+ion-tab-bar::after {
+  content: '';
+  position: absolute;
+  left: 0; 
+  right: 0;
+  bottom: 0;
+  height: env(safe-area-inset-bottom);
+  background: transparent !important; /* or same as page bg, not the tab bg */
+}
+
+/* Tab button base */
+ion-tab-button {
+  --color: #ffffff;      /* default icon + label color (white) */
+  --ripple-color: rgba(255,255,255,0.12);
+  font-size: 12px;       /* label size */
+
+  /* center content and stack icon + label */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Icon size */
+ion-tab-button ion-icon {
+  font-size: 22px; /* icon size */
+  color: inherit;  /* inherits from --color */
+}
+
+/* Label style */
+ion-tab-button ion-label {
+  font-size: 11px;
+  line-height: 12px;
+  color: inherit;
+  margin-top: 0;
+}
+
+/* Active tab styling (Ionic adds .tab-selected on the active ion-tab-button) */
+ion-tab-button.tab-selected {
+  --color: #ffde59;   /* highlight color (yellow) for icon+label) */
+  font-weight: 600;
+}
+
+/* Optional: make icons white but active yellow specifically (if you prefer explicit selector) */
+ion-tab-button:not(.tab-selected) ion-icon {
+  color: #ffffff;
+}
+ion-tab-button.tab-selected ion-icon {
+  color: #ffde59;
+}
+
+/* Responsive tweak: hide labels on very narrow screens if you want icon-only */
+@media (max-width: 360px) {
+  ion-tab-button ion-label {
+    display: none;
+  }
+}
+ion-tab-button {
+    --color-selected: #ffde59;
+    --color: #fff;
+}
+
+
+
+
+
+
+
+
+

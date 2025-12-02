@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Basic App Info -->
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>D List</string>
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleIdentifier</key>
+  <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>$(PRODUCT_NAME)</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0.4</string>
+  <key>CFBundleVersion</key>
+  <string>5</string>
+
+  <!-- Device Requirements -->
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>armv7</string>
+  </array>
+
+  <!-- Launch Files -->
+  <key>UILaunchStoryboardName</key>
+  <string>LaunchScreen</string>
+  <key>UIMainStoryboardFile</key>
+  <string>Main</string>
+
+  <!-- Orientation -->
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+
+  <!-- Status Bar -->
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <true/>
+
+  <!-- ⚙️ Firebase Configuration -->
+  <key>FirebaseAppDelegateProxyEnabled</key>
+  <true/>
+  <key>GOOGLE_APP_ID</key>
+  <string>$(GOOGLE_APP_ID)</string>
+  <key>GCM_SENDER_ID</key>
+  <string>$(GCM_SENDER_ID)</string>
+
+  <!-- 🔔 Push Notification Permissions -->
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>fetch</string>
+    <string>remote-notification</string>
+  </array>
+
+  <key>UIApplicationSupportsIndirectInputEvents</key>
+  <true/>
+
+  <!-- Request notification permissions automatically -->
+  <key>NSUserNotificationUsageDescription</key>
+  <string>This app uses notifications to keep you updated.</string>
+
+  <!-- ⚡ Capacitor iOS Bridge Settings -->
+  <key>CapacitorPlugins</key>
+  <dict>
+    <key>PushNotifications</key>
+    <dict>
+      <key>presentationOptions</key>
+      <array>
+        <string>badge</string>
+        <string>sound</string>
+        <string>alert</string>
+      </array>
+    </dict>
+  </dict>
+</dict>
+</plist>

@@ -1,0 +1,80 @@
+<app-global-header></app-global-header>
+
+<ion-content fullscreen class="review-content">
+  <div class="review-card">
+
+    <h2 class="form-title">New Review</h2>
+
+    <!-- Consumer Name -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-input placeholder="Consumer Name" [(ngModel)]="homeowner_name" required></ion-input>
+    </ion-item>
+
+    <!-- Address -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="home-outline" slot="start"></ion-icon>
+      <ion-input placeholder="Address" [(ngModel)]="address" required></ion-input>
+    </ion-item>
+
+    <!-- Zip -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="location-outline" slot="start"></ion-icon>
+      <ion-input placeholder="Zip" [(ngModel)]="zip" required></ion-input>
+    </ion-item>
+
+    <!-- Project Type -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="construct-outline" slot="start"></ion-icon>
+      <ion-select placeholder="Project Type" [(ngModel)]="project_type" required>
+        <ion-select-option *ngFor="let service of services" [value]="service.name">
+          {{ service.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Project Date -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-input type="date" placeholder="Project Date" [(ngModel)]="project_date"></ion-input>
+    </ion-item>
+
+    <!-- Ratings -->
+    <h3 class="section-title">Rate Consumer</h3>
+    <div class="rating-grid">
+      <div class="rating-group" *ngFor="let rating of ratingCategories">
+        <label>{{ rating.label }}</label>
+        <div class="stars">
+          <ion-icon *ngFor="let star of [1,2,3,4,5]"
+            [name]="rating.model >= star ? 'star' : 'star-outline'"
+            (click)="rating.model = star">
+          </ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+      <ion-textarea placeholder="Comments" autoGrow="true" [(ngModel)]="comments"></ion-textarea>
+    </ion-item>
+
+    <!-- File Upload -->
+    <div class="upload-section">
+      <ion-button expand="block" fill="outline" (click)="fileInput.click()">
+        <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+        Upload Files
+      </ion-button>
+      <input type="file" #fileInput (change)="onFileChange($event)" multiple hidden />
+
+      <ion-list *ngIf="files.length > 0">
+        <ion-item *ngFor="let f of files">{{ f.name }}</ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Submit Button -->
+    <ion-button expand="block" (click)="submit()" class="submit-btn">
+      Submit Review
+    </ion-button>
+  </div>
+</ion-content>

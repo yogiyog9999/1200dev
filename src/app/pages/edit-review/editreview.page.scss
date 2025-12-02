@@ -1,0 +1,81 @@
+.review-content {
+  --background: #f6f6f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+h2.form-title {
+    color: black;
+}
+.review-card {
+  width: 100%;
+  
+  background: #fff;
+  padding: 20px;
+ 
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.input-item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  --padding-start: 10px;
+}
+
+.section-title {
+  margin: 20px 0;
+  font-weight: 600;
+  text-align:center;
+}
+
+.rating-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rating-group label {
+  font-size: 14px;
+  color: #000;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stars ion-icon {
+  color: #f7b731;
+  font-size: 20px;
+  margin-right: 2px;
+  cursor: pointer;
+}
+.ion-valid.sc-ion-textarea-ios-h{
+  padding:0
+}
+  
+.sc-ion-textarea-ios{
+  min-height:60px; 
+ 
+}
+
+.upload-section {
+  margin: 20px 0;
+}
+.upload-section .button-outline {
+background: #241F23;
+border-radius: 10px;
+  color: #fff;
+  border: none;
+} 
+.submit-btn {
+  --background: #ff5722;
+  --border-radius: 12px;
+  font-weight: bold;
+  text-transform: none;
+}

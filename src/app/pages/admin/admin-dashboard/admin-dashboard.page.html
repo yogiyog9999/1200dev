@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Admin Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card button (click)="goToManageUsers()">
+          <ion-card-header>
+            <ion-card-title>Manage Users</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            View, add, or edit users and their roles.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card button (click)="goToManageReviews()">
+          <ion-card-header>
+            <ion-card-title>Manage Reviews</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Review flagged reviews and approve or reject them.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

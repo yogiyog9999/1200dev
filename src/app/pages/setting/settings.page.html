@@ -1,0 +1,33 @@
+<app-global-header></app-global-header>
+
+<h2 class="auth-title page-title">Edit Preferences</h2>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <!-- Hide Name on Reviews -->
+    <ion-item>
+      <ion-label>Do not display my name on reviews</ion-label>
+      <ion-toggle
+        [(ngModel)]="hideNameOnReviews"
+        [disabled]="isUpdating"
+        (ionChange)="updatePreferences()"
+      ></ion-toggle>
+    </ion-item>
+
+    <!-- Allow Push Notifications -->
+    <ion-item>
+      <ion-label>Allow push notifications</ion-label>
+      <ion-toggle
+        [(ngModel)]="allowPushNotifications"
+        [disabled]="isUpdating"
+        (ionChange)="updatePreferences()"
+      ></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <!-- Optional loading text -->
+  <div *ngIf="isUpdating" class="updating-text">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Saving your preferences...</p>
+  </div>
+</ion-content>

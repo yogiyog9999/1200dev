@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { supabase } from './services/supabase.client';
 import { PushService } from './services/push.service';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { Platform, NavController } from '@ionic/angular';  
+import { Platform, NavController } from '@ionic/angular';
 import { Device } from '@capacitor/device';
 import { App as CapacitorApp } from '@capacitor/app';
-
-import { FirebaseAnalyticsService } from './services/firebase-analytics.service';  // <-- ADD
+import { FirebaseAnalyticsService } from './services/firebase-analytics.service';
 
 @Component({
   standalone: false,
@@ -18,25 +17,28 @@ import { FirebaseAnalyticsService } from './services/firebase-analytics.service'
   `
 })
 export class AppComponent {
-  private sessionStart = 0; // for session tracking
+  private sessionStart = 0;
 
   constructor(
     private pushService: PushService,
     private platform: Platform,
     private navCtrl: NavController,
-    private analytics: FirebaseAnalyticsService // <-- ADD
+    private analytics: FirebaseAnalyticsService
   ) {
-    this.pushService.init();
     this.initializeApp();
     this.handleDeepLinks();
   }
 
   async initializeApp() {
     await this.platform.ready();
-          // Track FIRST OPEN & possibly INSTALL (only once)
+
+    // 🔥 Init Push Notification Service
+    await this.pushService.init();
+
+    // 🔥 Track install + first open
     this.trackFirstOpen();
 
-    // Track SESSION START
+    // 🔥 Track session start
     this.sessionStart = Date.now();
     this.analytics.log("session_start");
 
@@ -56,14 +58,13 @@ export class AppComponent {
     }
 
     if (user) {
-      this.analytics.setUserId(user.id);  // <-- Track logged in user
+      this.analytics.setUserId(user.id);
       this.navCtrl.navigateRoot('/tabs/dashboard');
     } else {
       this.navCtrl.navigateRoot('/auth/login');
     }
   }
 
-  // TRACK FIRST OPEN + INSTALL
   trackFirstOpen() {
     if (!localStorage.getItem('app_installed')) {
       this.analytics.log('app_install');
@@ -72,7 +73,6 @@ export class AppComponent {
     this.analytics.log('first_open');
   }
 
-  // TRACK DEEP LINKS
   handleDeepLinks() {
     CapacitorApp.addListener('appUrlOpen', (data: any) => {
       console.log('Deep link opened:', data.url);
@@ -94,14 +94,12 @@ export class AppComponent {
             access_token: accessToken,
             refresh_token: queryParams.get('refresh_token') || ''
           });
-
           this.navCtrl.navigateForward('/reset-password');
         }
       }
     });
   }
 
-  // TRACK SESSION END
   ngOnDestroy() {
     const duration = Math.round((Date.now() - this.sessionStart) / 1000);
     this.analytics.log('session_duration', { seconds: duration });

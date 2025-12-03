@@ -1,29 +1,33 @@
 import { Injectable } from '@angular/core';
 import { PushNotifications, Token, PushNotificationSchema } from '@capacitor/push-notifications';
+import { FirebaseMessaging } from '@capacitor-firebase/messaging';
 import { supabase } from './supabase.client';
-import { FirebaseAnalyticsService } from './firebase-analytics.service';  // <-- ADD
+import { FirebaseAnalyticsService } from './firebase-analytics.service';
 
 @Injectable({ providedIn: 'root' })
 export class PushService {
   constructor(private analytics: FirebaseAnalyticsService) {}
 
   async init() {
+    // 🔐 Check + Request permissions
     let permStatus = await PushNotifications.checkPermissions();
     if (permStatus.receive === 'prompt') {
       permStatus = await PushNotifications.requestPermissions();
     }
     if (permStatus.receive !== 'granted') {
-      console.warn('Push permission not granted');
+      console.warn('Push permission NOT granted');
       return;
     }
 
+    // Register for push
     await PushNotifications.register();
 
-    // 🔥 Token registration
+    // ============================
+    // 🔥 ANDROID FCM TOKEN
+    // ============================
     PushNotifications.addListener('registration', async (token: Token) => {
-      console.log('Got FCM token:', token.value);
-
-      this.analytics.log('push_token_generated'); // 🔥
+      console.log('Android FCM token:', token.value);
+      this.analytics.log('push_token_generated');
 
       const { data } = await supabase.auth.getUser();
       if (data.user) {
@@ -36,7 +40,25 @@ export class PushService {
       this.analytics.log('push_registration_error', { error: JSON.stringify(err) });
     });
 
-    // 🔥 Push received
+    // ============================
+    // 🔥 iOS FCM TOKEN via Firebase Messaging
+    // ============================
+    try {
+      const fcm = await FirebaseMessaging.getToken();
+
+      if (fcm?.token) {
+        console.log('iOS FCM token:', fcm.token);
+
+        const { data } = await supabase.auth.getUser();
+        if (data.user) {
+          await this.saveToken(data.user.id, fcm.token);
+        }
+      }
+    } catch (err) {
+      console.log('iOS token error:', err);
+    }
+
+    // PUSH RECEIVED
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
       console.log('Push received:', notification);
       this.analytics.log('push_received', {
@@ -55,7 +77,7 @@ export class PushService {
           fcm_token: fcmToken,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: 'user_id,fcm_token' }
+        { onConflict: 'user_id' }
       );
 
     if (error) {

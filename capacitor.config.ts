@@ -4,16 +4,20 @@ const config: CapacitorConfig = {
   appId: 'com.app.dlist',
   appName: 'D List',
   webDir: 'www',
+
   server: {
     androidScheme: 'https'
   },
+
   plugins: {
     App: {
-      scheme: 'dlist'    // <-- add this for deep linking
+      scheme: 'dlist'  // deep linking
     },
+
     StatusBar: {
       overlaysWebView: true
     },
+
     SplashScreen: {
       launchShowDuration: 3000,
       launchAutoHide: true,
@@ -22,7 +26,17 @@ const config: CapacitorConfig = {
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
       showSpinner: false
+    },
+
+   PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"]
     }
+  },
+
+  ios: {
+    scheme: 'dlist',
+    contentInset: 'automatic',
+    backgroundColor: '#ffffff'
   }
 };
 

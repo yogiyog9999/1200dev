@@ -70,7 +70,8 @@
     <string>fetch</string>
     <string>remote-notification</string>
   </array>
-
+ <key>aps-environment</key>
+ <string>production</string>
   <key>UIApplicationSupportsIndirectInputEvents</key>
   <true/>
 

@@ -9,58 +9,57 @@ export class PushService {
   constructor(private analytics: FirebaseAnalyticsService) {}
 
   async init() {
-    // 🔐 Check + Request permissions
-    let permStatus = await PushNotifications.checkPermissions();
-    if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
+    console.log("🔄 Initializing Push Service...");
+
+    // ======================================
+    // 1️⃣ Check Permission
+    // ======================================
+    let perm = await PushNotifications.checkPermissions();
+    if (perm.receive === 'prompt') {
+      perm = await PushNotifications.requestPermissions();
     }
-    if (permStatus.receive !== 'granted') {
-      console.warn('Push permission NOT granted');
+
+    if (perm.receive !== 'granted') {
+      alert("❌ Push Permission NOT granted!");
+      console.warn("Push Not Granted");
       return;
     }
 
-    // Register for push
-    await PushNotifications.register();
+    // ======================================
+    // 2️⃣ Register for Notifications
+    // ======================================
+    try {
+      await PushNotifications.register();
+      console.log("📌 PushNotifications.register() called");
+    } catch (err) {
+      alert("❌ Error calling PushNotifications.register()");
+      console.error(err);
+    }
 
-    // ============================
-    // 🔥 ANDROID FCM TOKEN
-    // ============================
+    // ======================================
+    // 3️⃣ Token Listener (APNs + Android)
+    // ======================================
     PushNotifications.addListener('registration', async (token: Token) => {
-      console.log('Android FCM token:', token.value);
-      this.analytics.log('push_token_generated');
+      console.log("📌 APNs/Android token received:", token.value);
+      alert("📌 Native Token Received!");
 
-      const { data } = await supabase.auth.getUser();
-      if (data.user) {
-        await this.saveToken(data.user.id, token.value);
-      }
+      this.analytics.log('push_token_received');
+
+      // Now fetch FCM token (Android & iOS)
+      await this.getFcmTokenAndSave();
     });
 
     PushNotifications.addListener('registrationError', (err) => {
-      console.error('Push registration error:', err);
+      alert("❌ ERROR: registrationError");
+      console.error("registrationError:", err);
       this.analytics.log('push_registration_error', { error: JSON.stringify(err) });
     });
 
-    // ============================
-    // 🔥 iOS FCM TOKEN via Firebase Messaging
-    // ============================
-    try {
-      const fcm = await FirebaseMessaging.getToken();
-
-      if (fcm?.token) {
-        console.log('iOS FCM token:', fcm.token);
-
-        const { data } = await supabase.auth.getUser();
-        if (data.user) {
-          await this.saveToken(data.user.id, fcm.token);
-        }
-      }
-    } catch (err) {
-      console.log('iOS token error:', err);
-    }
-
-    // PUSH RECEIVED
+    // ======================================
+    // 4️⃣ Notification Received
+    // ======================================
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-      console.log('Push received:', notification);
+      console.log("📨 Push Received:", notification);
       this.analytics.log('push_received', {
         title: notification.title,
         id: notification.id
@@ -68,25 +67,85 @@ export class PushService {
     });
   }
 
-  async saveToken(userId: string, fcmToken: string) {
+  // =================================================
+  // FCM TOKEN FETCH + SAVE (iOS + Android)
+  // =================================================
+  async getFcmTokenAndSave(retry = 0) {
+    try {
+      console.log("🔍 Fetching FCM token...");
+      const fcm = await FirebaseMessaging.getToken();
+
+      if (!fcm?.token) {
+        console.log("⚠ FCM Token NULL");
+
+        if (retry < 3) {
+          console.log(`⏳ Retrying FCM token... Attempt ${retry + 1}`);
+          setTimeout(() => this.getFcmTokenAndSave(retry + 1), 1500);
+        } else {
+          alert("❌ FCM Token is NULL. Push may not work!");
+        }
+
+        return;
+      }
+
+      console.log("🔥 FCM Token:", fcm.token);
+      alert("🔥 FCM Token Generated!");
+
+      const { data } = await supabase.auth.getUser();
+
+      if (data.user) {
+        await this.saveToken(data.user.id, fcm.token);
+      }
+
+    } catch (err) {
+      alert("❌ Error fetching FCM token");
+      console.error("FCM token error:", err);
+    }
+  }
+
+  // =================================================
+  // SAVE TOKEN IN SUPABASE
+  // =================================================
+  async saveToken(userId: string, token: string) {
+    console.log("💾 Saving token to Supabase...");
+
     const { error } = await supabase
       .from('user_tokens')
       .upsert(
         {
           user_id: userId,
-          fcm_token: fcmToken,
+          fcm_token: token,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'user_id' }
       );
 
     if (error) {
-      console.error('Error saving token:', error);
+      alert("❌ Error saving token in DB");
+      console.error("Save token error:", error);
       this.analytics.log('push_token_save_error');
+    } else {
+      alert("✅ Token Saved Successfully in DB");
+      console.log("Token saved successfully!");
     }
   }
 
+  // =================================================
+  // DELETE TOKEN
+  // =================================================
   async deleteTokens(userId: string) {
-    await supabase.from('user_tokens').delete().eq('user_id', userId);
+    console.log("🗑 Deleting user tokens...");
+
+    const { error } = await supabase
+      .from('user_tokens')
+      .delete()
+      .eq('user_id', userId);
+
+    if (error) {
+      alert("❌ Error deleting tokens");
+      console.error(error);
+    } else {
+      alert("🗑 Token deleted!");
+    }
   }
 }

@@ -1,114 +1,92 @@
 import { Injectable } from '@angular/core';
-import {
-  PushNotifications,
-  Token,
-  PushNotificationSchema,
-  ActionPerformed
-} from '@capacitor/push-notifications';
-
-import { Capacitor } from '@capacitor/core';
+import { PushNotifications, Token, PushNotificationSchema } from '@capacitor/push-notifications';
+import { FirebaseMessaging } from '@capacitor-firebase/messaging';
 import { supabase } from './supabase.client';
 import { FirebaseAnalyticsService } from './firebase-analytics.service';
 
 @Injectable({ providedIn: 'root' })
 export class PushService {
-
   constructor(private analytics: FirebaseAnalyticsService) {}
 
   async init() {
-    alert("🔄 PushService.init() called");
-    console.log("🚀 Initializing Push Service...");
+    console.log("📲 Initializing Push Service...");
 
-    if (Capacitor.getPlatform() === 'web') {
-      alert("❌ Push does NOT work on web");
-      console.warn("Push not supported on web");
+    // ============================
+    // 1️⃣ REQUEST PUSH PERMISSIONS (iOS required)
+    // ============================
+    let permStatus = await PushNotifications.checkPermissions();
+    if (permStatus.receive === 'prompt') {
+      permStatus = await PushNotifications.requestPermissions();
+    }
+
+    if (permStatus.receive !== 'granted') {
+      console.warn('❌ Push permission NOT granted');
       return;
     }
 
-    // -----------------------------------------
-    // 1️⃣ CHECK + REQUEST PERMISSION
-    // -----------------------------------------
-    let perm = await PushNotifications.checkPermissions();
-    alert("🔍 checkPermissions: " + JSON.stringify(perm));
+    // ============================
+    // 2️⃣ REQUEST FIREBASE PERMISSION (iOS required)
+    // ============================
+    const firebasePerm = await FirebaseMessaging.requestPermissions();
 
-    if (perm.receive !== 'granted') {
-      alert("⏳ Requesting permission...");
-      perm = await PushNotifications.requestPermissions();
-      alert("📌 requestPermissions result: " + JSON.stringify(perm));
-    }
-
-    if (perm.receive !== 'granted') {
-      alert("❌ Push NOT granted!");
-      console.error("Push permission not granted:", perm);
+    if (
+      firebasePerm.authorizationStatus === 'notDetermined' ||
+      firebasePerm.authorizationStatus === 'denied'
+    ) {
+      console.warn('❌ Firebase Messaging permission NOT granted');
       return;
     }
 
-    // -----------------------------------------
-    // 2️⃣ REGISTER FOR NOTIFICATIONS
-    // -----------------------------------------
-    try {
-      alert("📡 Calling PushNotifications.register()...");
-      await PushNotifications.register();
-      alert("✅ PushNotifications.register() CALLED successfully");
-    } catch (err) {
-      alert("❌ ERROR calling register()");
-      console.error(err);
-    }
+    // ============================
+    // 3️⃣ REGISTER FOR PUSH (APNs)
+    // ============================
+    await PushNotifications.register();
 
-    this.setupListeners();
-  }
-
-  // ---------------------------------------------------
-  // 3️⃣ LISTENERS (TOKEN + RECEIVED + CLICK ACTION)
-  // ---------------------------------------------------
-  private setupListeners() {
-    alert("📌 Setting up listeners...");
-
-    // ✔ Token received (APNs or FCM bridged token)
+    // ============================
+    // 4️⃣ ANDROID TOKEN
+    // ============================
     PushNotifications.addListener('registration', async (token: Token) => {
-      alert("🔥 TOKEN RECEIVED: " + token.value);
-      console.log("🔥 Push Token:", token.value);
-
-      this.analytics.log('push_token_received');
-      await this.saveTokenToDB(token.value);
+      console.log('📌 Android FCM Token:', token.value);
+      await this.storeToken(token.value);
     });
 
-    // ❌ Registration failed
-    PushNotifications.addListener('registrationError', err => {
-      alert("❌ registrationError: " + JSON.stringify(err));
-      console.error("registrationError:", err);
-
-      this.analytics.log('push_registration_error', err);
+    // ============================
+    // 5️⃣ iOS FCM TOKEN
+    // ============================
+    FirebaseMessaging.addListener('tokenReceived', async (event) => {
+      console.log('📌 iOS FCM Token:', event.token);
+      await this.storeToken(event.token);
     });
 
-    // 📩 Notification received when app is open
-    PushNotifications.addListener('pushNotificationReceived',
-      (notification: PushNotificationSchema) => {
-        alert("📨 Push Received!\n" + JSON.stringify(notification));
-        console.log("📨 Notification Received:", notification);
-    });
+    // Fallback iOS token fetch
+    try {
+      const result = await FirebaseMessaging.getToken();
+      if (result?.token) {
+        console.log('📌 iOS FCM Token (fallback):', result.token);
+        await this.storeToken(result.token);
+      }
+    } catch (err) {
+      console.log('⚠️ iOS getToken() error:', err);
+    }
 
-    // 📌 Notification tapped
-    PushNotifications.addListener('pushNotificationActionPerformed',
-      (action: ActionPerformed) => {
-        alert("👉 Notification Clicked:\n" + JSON.stringify(action));
-        console.log("📌 Notification Action:", action);
+    // ============================
+    // 6️⃣ NOTIFICATION RECEIVED
+    // ============================
+    PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
+      console.log('📨 Push Received:', notification);
+      this.analytics.log('push_received', {
+        title: notification.title,
+        id: notification.id,
+      });
     });
   }
 
-  // ---------------------------------------------------
-  // SAVE TOKEN IN SUPABASE
-  // ---------------------------------------------------
-  private async saveTokenToDB(token: string) {
-    alert("💾 Saving token: " + token);
-
+  // ============================
+  // SAVE TOKEN TO SUPABASE
+  // ============================
+  private async storeToken(token: string) {
     const { data } = await supabase.auth.getUser();
-
-    if (!data?.user) {
-      alert("⚠ No user logged in → Token NOT saved");
-      console.warn("No user found");
-      return;
-    }
+    if (!data.user) return;
 
     const { error } = await supabase
       .from('user_tokens')
@@ -122,32 +100,12 @@ export class PushService {
       );
 
     if (error) {
-      alert("❌ ERROR saving token\n" + JSON.stringify(error));
-      console.error("Token save error:", error);
-      this.analytics.log('token_save_error', error);
-    } else {
-      alert("✅ Token SAVED successfully!");
-      console.log("Token saved successfully!");
+      console.error('❌ Failed to save token:', error);
+      this.analytics.log('push_token_save_error');
     }
   }
 
-  // ---------------------------------------------------
-  // DELETE TOKEN (LOGOUT USE CASE)
-  // ---------------------------------------------------
-  async deleteToken(userId: string) {
-    alert("🗑 Deleting token for user: " + userId);
-
-    const { error } = await supabase
-      .from('user_tokens')
-      .delete()
-      .eq('user_id', userId);
-
-    if (error) {
-      alert("❌ ERROR deleting token\n" + JSON.stringify(error));
-      console.error(error);
-    } else {
-      alert("🗑 Token deleted!");
-      console.log("Token deleted");
-    }
+  async deleteTokens(userId: string) {
+    await supabase.from('user_tokens').delete().eq('user_id', userId);
   }
 }

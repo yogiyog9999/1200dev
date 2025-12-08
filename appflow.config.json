@@ -3,6 +3,7 @@
   "appName": "D List",
   "ios": {
     "build": {
+      "development": {},
       "production": {
         "useAppflowProfile": true,
         "entitlements": {

@@ -1,0 +1,21 @@
+{
+  "appId": "com.app.dlist",
+  "appName": "D List",
+  "ios": {
+    "build": {
+      "production": {
+        "useAppflowProfile": true,
+        "entitlements": {
+          "aps-environment": "production"
+        }
+      }
+    }
+  },
+  "cordova": {},
+  "android": {},
+  "build": {
+    "web": {
+      "release": true
+    }
+  }
+}

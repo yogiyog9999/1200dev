@@ -16,97 +16,76 @@ export class PushService {
   constructor(private analytics: FirebaseAnalyticsService) {}
 
   async init() {
-    alert("🔄 PushService.init() called");
-    console.log("🚀 Initializing Push Service...");
+    console.log("Initializing Push Service...");
 
     if (Capacitor.getPlatform() === 'web') {
-      alert("❌ Push does NOT work on web");
       console.warn("Push not supported on web");
       return;
     }
 
-    // -----------------------------------------
     // 1️⃣ CHECK + REQUEST PERMISSION
-    // -----------------------------------------
     let perm = await PushNotifications.checkPermissions();
-    alert("🔍 checkPermissions: " + JSON.stringify(perm));
 
     if (perm.receive !== 'granted') {
-      alert("⏳ Requesting permission...");
       perm = await PushNotifications.requestPermissions();
-      alert("📌 requestPermissions result: " + JSON.stringify(perm));
     }
 
     if (perm.receive !== 'granted') {
-      alert("❌ Push NOT granted!");
       console.error("Push permission not granted:", perm);
       return;
     }
 
-    // -----------------------------------------
     // 2️⃣ REGISTER FOR NOTIFICATIONS
-    // -----------------------------------------
     try {
-      alert("📡 Calling PushNotifications.register()...");
       await PushNotifications.register();
-      alert("✅ PushNotifications.register() CALLED successfully");
+      console.log("Push registration triggered");
     } catch (err) {
-      alert("❌ ERROR calling register()");
-      console.error(err);
+      console.error("Error during PushNotifications.register()", err);
     }
 
     this.setupListeners();
   }
 
-  // ---------------------------------------------------
-  // 3️⃣ LISTENERS (TOKEN + RECEIVED + CLICK ACTION)
-  // ---------------------------------------------------
+  // 3️⃣ PUSH LISTENERS
   private setupListeners() {
-    alert("📌 Setting up listeners...");
+    console.log("Setting up push listeners");
 
-    // ✔ Token received (APNs or FCM bridged token)
+    // Token received
     PushNotifications.addListener('registration', async (token: Token) => {
-      alert("🔥 TOKEN RECEIVED: " + token.value);
-      console.log("🔥 Push Token:", token.value);
-
+      console.log("Push Token:", token.value);
       this.analytics.log('push_token_received');
       await this.saveTokenToDB(token.value);
     });
 
-    // ❌ Registration failed
+    // Registration failed
     PushNotifications.addListener('registrationError', err => {
-      alert("❌ registrationError: " + JSON.stringify(err));
-      console.error("registrationError:", err);
-
+      console.error("Registration error:", err);
       this.analytics.log('push_registration_error', err);
     });
 
-    // 📩 Notification received when app is open
+    // Notification received (foreground)
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotificationSchema) => {
-        alert("📨 Push Received!\n" + JSON.stringify(notification));
-        console.log("📨 Notification Received:", notification);
-    });
+        console.log("Notification Received:", notification);
+      }
+    );
 
-    // 📌 Notification tapped
+    // Notification tapped
     PushNotifications.addListener('pushNotificationActionPerformed',
       (action: ActionPerformed) => {
-        alert("👉 Notification Clicked:\n" + JSON.stringify(action));
-        console.log("📌 Notification Action:", action);
-    });
+        console.log("Notification Action:", action);
+      }
+    );
   }
 
-  // ---------------------------------------------------
-  // SAVE TOKEN IN SUPABASE
-  // ---------------------------------------------------
+  // 4️⃣ SAVE TOKEN IN SUPABASE
   private async saveTokenToDB(token: string) {
-    alert("💾 Saving token: " + token);
+    console.log("Saving token:", token);
 
     const { data } = await supabase.auth.getUser();
 
     if (!data?.user) {
-      alert("⚠ No user logged in → Token NOT saved");
-      console.warn("No user found");
+      console.warn("No user found – token not saved");
       return;
     }
 
@@ -122,20 +101,16 @@ export class PushService {
       );
 
     if (error) {
-      alert("❌ ERROR saving token\n" + JSON.stringify(error));
       console.error("Token save error:", error);
       this.analytics.log('token_save_error', error);
     } else {
-      alert("✅ Token SAVED successfully!");
-      console.log("Token saved successfully!");
+      console.log("Token saved successfully");
     }
   }
 
-  // ---------------------------------------------------
-  // DELETE TOKEN (LOGOUT USE CASE)
-  // ---------------------------------------------------
+  // 5️⃣ DELETE TOKEN (LOGOUT USE CASE)
   async deleteToken(userId: string) {
-    alert("🗑 Deleting token for user: " + userId);
+    console.log("Deleting token for user:", userId);
 
     const { error } = await supabase
       .from('user_tokens')
@@ -143,10 +118,8 @@ export class PushService {
       .eq('user_id', userId);
 
     if (error) {
-      alert("❌ ERROR deleting token\n" + JSON.stringify(error));
-      console.error(error);
+      console.error("Error deleting token:", error);
     } else {
-      alert("🗑 Token deleted!");
       console.log("Token deleted");
     }
   }

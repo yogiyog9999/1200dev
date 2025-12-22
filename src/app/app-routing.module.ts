@@ -22,6 +22,10 @@ const routes: Routes = [
   loadChildren: () => import('./pages/help/help.module').then(m => m.HelpPageModule)
 },
   {
+  path: 'delete',
+  loadChildren: () => import('./pages/delete/delete.module').then(m => m.DeletePageModule)
+},
+  {
     path: 'dashboard',
       loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule),
 	   canActivate: [AuthGuard]

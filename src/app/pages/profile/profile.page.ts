@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { supabase } from '../../services/supabase.client';
 import { AuthService, ContractorProfile } from '../../services/auth.service';
-import { ToastController, LoadingController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController} from '@ionic/angular';
 import { ReviewService } from '../../services/review.service';
 @Component({
   standalone: false,
@@ -37,6 +37,7 @@ states: any[] = [];
     private router: Router,
     private auth: AuthService,
     private toastCtrl: ToastController,
+    private alertController: AlertController,
     private loadingCtrl: LoadingController
   ) {}
 
@@ -210,5 +211,24 @@ formatPhoneValue(phone: string | number): string {
   if (p.length !== 10) return p;
   return `(${p.substring(0, 3)}) ${p.substring(3, 6)}-${p.substring(6)}`;
 }
+async confirmDelete() {
+    const alert = await this.alertController.create({
+      header: 'Confirm',
+      message: 'Are you sure you want to submit a delete request for your account?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Yes, Proceed',
+          handler: () => {
+            this.router.navigate(['/delete']);
+          }
+        }
+      ]
+    });
 
+    await alert.present();
+  }
 }

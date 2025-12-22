@@ -126,8 +126,8 @@
       <ion-button  expand="block" fill="solid" color="dark" class="secondary-btn" routerLink="/tabs/setting">Edit Preferences</ion-button>
 
 <ion-button expand="block" fill="solid" color="dark" class="secondary-btn" routerLink="/tabs/notifications">Notifications</ion-button>
-<ion-button expand="block" fill="solid" color="dark" class="secondary-btn" href="http://dlistapp.net/request-account-cancelation" target="_blank">Delete Account
-</ion-button> </form>
+<ion-button expand="block" fill="solid" color="dark" class="secondary-btn" (click)="confirmDelete()">Delete Account</ion-button>
+  </form>
 
 </div>
   </ng-template>

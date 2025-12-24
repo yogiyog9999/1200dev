@@ -92,7 +92,7 @@
         <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
         Upload Files (optional)
       </ion-button>
-      <input type="file" #fileInput (change)="onFileChange($event)" multiple hidden />
+<input type="file" #fileInput hidden multiple accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"(change)="onFileChange($event)">
 
       <ion-list *ngIf="files.length > 0">
         <ion-item *ngFor="let f of files">{{ f.name }}</ion-item>

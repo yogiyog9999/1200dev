@@ -1,345 +1,240 @@
-import { Component, NgZone, ViewChild, AfterViewInit } from '@angular/core';
-import { IonInput, ToastController, LoadingController } from '@ionic/angular';
-import { ReviewService } from '../../services/review.service';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { supabase } from '../../services/supabase.client';
-import { debounceTime } from 'rxjs/operators';
-import { fromEvent } from 'rxjs';
-import { FirebaseAnalyticsService } from '../../services/firebase-analytics.service'; // <-- analytics
-
-declare var google: any;
+import { AuthService, ContractorProfile } from '../../services/auth.service';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   standalone: false,
-  selector: 'app-review-new',
-  templateUrl: './review-new.page.html',
-  styleUrls: ['./review-new.page.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.page.html',
+  styleUrls: ['./profile.page.scss']
 })
-export class ReviewNewPage implements AfterViewInit {
-  @ViewChild('autocompleteAddress', { static: false }) autocompleteInput!: IonInput;
-
+export class ProfilePage implements OnInit {
   // -------------------------
-  // Data / Form State
+  // User / Form Data
   // -------------------------
-  stateList: string[] = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming'
-  ];
+  userId = '';
+  user: any = {};
+  reviewCount: number = 0;
+  userBadge: any;
+  isLoading = false;
 
-  defaultRatings = [
-    { key: 'rating_payment', label: 'Payment Timeliness', model: 0 },
-    { key: 'rating_communication', label: 'Communication', model: 0 },
-    { key: 'rating_scope', label: 'Scope Clarity', model: 0 },
-    { key: 'rating_change_orders', label: 'Change Order Fairness', model: 0 },
-    { key: 'rating_overall', label: 'Overall Experience', model: 0 }
-  ];
+  form: ContractorProfile = {
+    business_name: '',
+    first_name: '',
+    display_name: '',
+    last_name: '',
+    trade: '',
+    city: '',
+    state: '',
+    country: '',
+    license_number: '',
+    profile_image_url: ''
+  };
 
-  socialRatings = [
-    { key: 'rating_approach', label: 'Approachability', model: 0 },
-    { key: 'rating_respect', label: 'Respect & Courtesy', model: 0 },
-    { key: 'rating_communication_style', label: 'Communication Style', model: 0 },
-    { key: 'rating_composure', label: 'Emotional Composure', model: 0 },
-    { key: 'rating_trust', label: 'Trustworthiness', model: 0 }
-  ];
-
-  ratingCategories = [...this.defaultRatings];
-
-  homeowner_name = '';
-  project_type = '';
-  address = '';
-  zip = '';
-  project_date = '';
-  comments = '';
-  files: File[] = [];
-  me: any;
   services: any[] = [];
-  autocomplete: any;
-  lat: number | null = null;
-  lng: number | null = null;
-  selectedState = '';
-  selectedCity = '';
-  first_name = '';
-  last_name = '';
-  manualEdited = { city: false, state: false, zip: false };
+  states: any[] = [];
 
   // -------------------------
   // Constructor
   // -------------------------
   constructor(
     private reviewSvc: ReviewService,
-    private auth: AuthService,
+    private route: ActivatedRoute,
     private router: Router,
+    private auth: AuthService,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
-    private ngZone: NgZone,
-    private analytics: FirebaseAnalyticsService
+    private alertController: AlertController,
+    private loadingCtrl: LoadingController
   ) {}
 
   // -------------------------
   // Lifecycle
   // -------------------------
   async ngOnInit() {
-    this.analytics.log('review_started');
+    this.isLoading = true;
 
     try {
       this.services = await this.reviewSvc.getServices();
     } catch (err) {
       console.error('Failed to load services:', err);
     }
-  }
 
-  ngAfterViewInit() {
-    this.initAutocomplete();
-  }
+    this.route.queryParams.subscribe(async params => {
+      this.userId = params['userId'];
 
-  // -------------------------
-  // Ratings Logic
-  // -------------------------
-  onInteractionChange() {
-    if (this.project_type === 'Social') {
-      this.ratingCategories = JSON.parse(JSON.stringify(this.socialRatings));
-    } else {
-      this.ratingCategories = JSON.parse(JSON.stringify(this.defaultRatings));
-    }
-  }
+      if (!this.userId) {
+        const user = await this.auth.currentUser();
+        if (user) this.userId = user.id;
+      }
 
-  // -------------------------
-  // Manual edits tracking
-  // -------------------------
-  manualEdit(field: 'city' | 'state' | 'zip', event: any) {
-    const val = event?.detail?.value || '';
-    this.manualEdited[field] = val.trim() !== '';
-  }
+      if (!this.userId) {
+        this.isLoading = false;
+        return;
+      }
 
-  // -------------------------
-  // Google Places Autocomplete
-  // -------------------------
-  initAutocomplete() {
-    this.autocompleteInput.getInputElement().then((inputEl: HTMLInputElement) => {
-      inputEl.setAttribute('autocomplete', 'off');
+      const existing = await this.auth.getProfile(this.userId);
+      if (existing) {
+        this.form = { ...existing };
 
-      this.autocomplete = new google.maps.places.Autocomplete(inputEl, {
-        types: ['address'],
-        componentRestrictions: { country: 'us' },
-        fields: ['formatted_address', 'address_components', 'geometry']
-      });
-
-      let suggestionPicked = false;
-
-      this.autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          const place = this.autocomplete.getPlace();
-          if (!place || !place.formatted_address) return;
-
-          suggestionPicked = true;
-          this.address = place.formatted_address;
-          this.updateAddressFromPlace(place);
-        });
-      });
-
-      // Handle manual input
-      fromEvent(inputEl, 'input')
-        .pipe(debounceTime(500))
-        .subscribe(() => {
-          if (!suggestionPicked) {
-            const typedValue = inputEl.value.trim();
-            if (typedValue) this.geocodeManualAddress(typedValue);
-            else this.clearAddressFields();
-          }
-        });
-
-      inputEl.addEventListener('paste', () => {
-        setTimeout(() => {
-          const typedValue = inputEl.value.trim();
-          if (typedValue) this.geocodeManualAddress(typedValue);
-        }, 200);
-      });
-
-      inputEl.addEventListener('blur', () => {
-        const typedValue = inputEl.value.trim();
-        if (!typedValue) {
-          this.clearAddressFields();
-          suggestionPicked = false;
-          return;
+        // Format phone for UI
+        if (existing.phone) {
+          this.form.phone = this.formatPhoneValue(existing.phone);
         }
-        if (!suggestionPicked) this.geocodeManualAddress(typedValue);
-        suggestionPicked = false;
-      });
+      }
+
+      this.isLoading = false;
     });
-  }
 
-  clearAddressFields() {
-    if (!this.manualEdited.city) this.selectedCity = '';
-    if (!this.manualEdited.state) this.selectedState = '';
-    if (!this.manualEdited.zip) this.zip = '';
-    this.lat = null;
-    this.lng = null;
-  }
-
-  geocodeManualAddress(address: string) {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address, region: 'US' }, (results: any, status: any) => {
-      this.ngZone.run(() => {
-        if (status === 'OK' && results && results[0]) {
-          this.updateAddressFromPlace(results[0]);
-        } else {
-          console.warn('Geocode failed:', status);
-
-          const zipMatch = address.match(/\b\d{5}(?:-\d{4})?\b/);
-          const stateMatch = address.match(/\b[A-Z]{2}\b/);
-          if (!this.manualEdited.zip && zipMatch) this.zip = zipMatch[0];
-          if (!this.manualEdited.state && stateMatch)
-            this.selectedState = this.stateList.find(s => s.includes(stateMatch[0])) || stateMatch[0];
-
-          const cityCandidate = address
-            .replace(this.zip, '')
-            .replace(stateMatch?.[0] || '', '')
-            .split(',')[0];
-          if (!this.manualEdited.city && cityCandidate) this.selectedCity = cityCandidate.trim();
-        }
-      });
-    });
-  }
-
-  updateAddressFromPlace(place: any) {
-    if (!place.address_components) return;
-
-    const components = place.address_components;
-    const get = (types: string[]) => {
-      const comp = components.find((c: any) =>
-        types.some((t: string) => c.types.includes(t))
-      );
-      return comp ? comp.long_name : '';
-    };
-
-    const googleZip = get(['postal_code']) || '';
-    const googleCity = get(['locality', 'postal_town', 'sublocality', 'sublocality_level_1', 'administrative_area_level_3']) || '';
-    const googleState = get(['administrative_area_level_1']) || '';
-
-    if (!this.manualEdited.city) this.selectedCity = googleCity || this.selectedCity;
-    if (!this.manualEdited.state) {
-      const matchedState = this.stateList.find(
-        s => s.toLowerCase() === googleState.toLowerCase() || s.toLowerCase().includes(googleState.toLowerCase())
-      );
-      this.selectedState = matchedState || googleState || this.selectedState;
-    }
-    if (!this.manualEdited.zip) this.zip = googleZip || this.zip;
-
-    if (place.geometry?.location) {
-      this.lat = place.geometry.location.lat();
-      this.lng = place.geometry.location.lng();
+    try {
+      this.states = await this.reviewSvc.getStates();
+    } catch (err) {
+      console.error('Failed to load states', err);
+      this.presentToast('Failed to load states', 'danger');
     }
 
-    if ((!this.selectedCity || !this.selectedState || !this.zip) && this.address) {
-      this.geocodeManualAddress(this.address);
+    try {
+      this.userBadge = await this.reviewSvc.fetchUserBadge(this.userId);
+    } catch (err) {
+      console.error('Failed to fetch user badge', err);
     }
+
+    this.reviewCount = await this.reviewSvc.getUserReviewCount(this.userId);
   }
 
   // -------------------------
   // Toast Helper
   // -------------------------
-  async presentToast(message: string, color: string = 'success') {
+  async presentToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({
       message,
       duration: 2500,
-      color,
+      position: 'bottom',
+      color
     });
-    toast.present();
+    await toast.present();
   }
 
   // -------------------------
-  // Form Submission
+  // Upload Profile Image
   // -------------------------
-  async submit() {
-    this.me = await this.auth.currentUser();
-    if (!this.me) {
-      this.presentToast('Not logged in', 'danger');
-      return;
-    }
+  async uploadImage(event: any) {
+    const file = event.target.files[0];
+    if (!file || !this.userId) return;
 
-    if (!this.zip || !this.project_type) {
-      this.presentToast('Please fill all required fields', 'danger');
-      return;
-    }
-
-    const unRated = this.ratingCategories.some(cat => cat.model === 0);
-    if (unRated) {
-      this.presentToast('Please rate all categories before submitting', 'danger');
-      return;
-    }
-
-    const loading = await this.loadingCtrl.create({
-      message: 'Submitting review...',
-      spinner: 'crescent',
-    });
+    const ext = file.name.split('.').pop();
+    const path = `profile-images/${this.userId}.${ext}`;
+    const loading = await this.loadingCtrl.create({ message: 'Uploading...' });
     await loading.present();
 
     try {
-      const review: any = {
-        contractor_id: this.me.id,
-        homeowner_first_name: this.first_name,
-        homeowner_last_name: this.last_name,
-        address: this.address,
-        zip: this.zip,
-        project_type: this.project_type,
-        project_date: this.project_date || null,
-        comments: this.comments,
-        lat: this.lat,
-        lng: this.lng,
-        state: this.selectedState,
-        city: this.selectedCity
-      };
+      const { error: uploadError } = await supabase.storage
+        .from('profile-images')
+        .upload(path, file, { upsert: true });
 
-      this.ratingCategories.forEach(cat => {
-        review[cat.key] = cat.model;
-      });
+      if (uploadError) throw uploadError;
 
-      review.auto_flag = this.ratingCategories.some(r => r.model <= 2);
+      const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+      this.form.profile_image_url = `${data.publicUrl}?t=${Date.now()}`;
 
-      const uploadedUrls: string[] = [];
-      for (const file of this.files) {
-        const ext = file.name.split('.').pop();
-        const path = `reviews/${this.me.id}_${Date.now()}.${ext}`;
-        const { error } = await supabase.storage
-          .from('profile-images')
-          .upload(path, file, { upsert: true });
-        if (error) throw error;
+      // Optional: also save in DB
+      await this.auth.upsertProfile(this.userId, { ...this.form });
 
-        const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
-        uploadedUrls.push(data.publicUrl);
-      }
-
-      await this.reviewSvc.submitReview({ ...review, files: uploadedUrls });
-
-      this.analytics.log('review_submitted', {
-        contractor_id: this.me.id,
-        city: this.selectedCity,
-        state: this.selectedState,
-        auto_flag: review.auto_flag
-      });
-
-      this.router.navigateByUrl('/tabs/thanks', { replaceUrl: true });
+      this.presentToast('Profile image updated!', 'success');
     } catch (e: any) {
-      this.analytics.log('review_submit_failed', { message: e.message || 'Unknown error' });
-      this.presentToast(e.message || 'Failed to submit review', 'danger');
+      this.presentToast(e.message || 'Image upload failed', 'danger');
     } finally {
       loading.dismiss();
     }
   }
 
   // -------------------------
-  // File Input Change
+  // Save Profile
   // -------------------------
-  onFileChange(ev: any) {
-    this.files = Array.from(ev.target.files || []);
+  async save() {
+    if (!this.userId) {
+      this.presentToast('No user found', 'danger');
+      return;
+    }
+
+    // Required field validation
+    const required = ['business_name', 'trade', 'city', 'state'] as const;
+    for (const k of required) {
+      if (!(this.form as any)[k]) {
+        this.presentToast(`Please fill ${k.replace('_', ' ')}`, 'warning');
+        return;
+      }
+    }
+
+    // Phone validation
+    const phoneRaw = String(this.form.phone || '').replace(/\D/g, '');
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(phoneRaw)) {
+      this.presentToast('Please enter a valid 10-digit US phone number', 'warning');
+      return;
+    }
+    const rawPhoneToSave = phoneRaw;
+
+    // ZIP validation
+    const zipRegex = /^\d{5}$/;
+    if (!zipRegex.test(this.form.zip || '')) {
+      this.presentToast('Please enter a valid 5-digit ZIP code', 'warning');
+      return;
+    }
+
+    const loading = await this.loadingCtrl.create({ message: 'Saving...' });
+    await loading.present();
+
+    try {
+      await this.auth.upsertProfile(this.userId, { ...this.form, phone: rawPhoneToSave });
+      this.presentToast('Profile saved successfully!', 'success');
+      this.router.navigate(['/tabs/profile']);
+    } catch (e: any) {
+      this.presentToast(e.message || 'Failed to save profile', 'danger');
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  // -------------------------
+  // Phone Input Formatting
+  // -------------------------
+  onPhoneInput(event: any) {
+    let input = event.target.value || '';
+    input = input.replace(/\D/g, '');
+    if (input.length > 10) input = input.substring(0, 10);
+
+    if (input.length >= 6) {
+      event.target.value = `(${input.substring(0, 3)}) ${input.substring(3, 6)}-${input.substring(6)}`;
+    } else if (input.length >= 3) {
+      event.target.value = `(${input.substring(0, 3)}) ${input.substring(3)}`;
+    } else {
+      event.target.value = input;
+    }
+
+    this.form.phone = event.target.value;
+  }
+
+  formatPhoneValue(phone: string | number): string {
+    const p = String(phone).replace(/\D/g, '');
+    if (p.length !== 10) return p;
+    return `(${p.substring(0, 3)}) ${p.substring(3, 6)}-${p.substring(6)}`;
+  }
+
+  // -------------------------
+  // Confirm Delete Account
+  // -------------------------
+  async confirmDelete() {
+    const alert = await this.alertController.create({
+      header: 'Confirm',
+      message: 'Are you sure you want to submit a delete request for your account?',
+      buttons: [
+        { text: 'No', role: 'cancel' },
+        { text: 'Yes, Proceed', handler: () => this.router.navigate(['/delete']) }
+      ]
+    });
+    await alert.present();
   }
 }

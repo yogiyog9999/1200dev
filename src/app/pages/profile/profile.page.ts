@@ -1,258 +1,167 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { supabase } from '../../services/supabase.client';
-import { AuthService, ContractorProfile } from '../../services/auth.service';
-import { ToastController, LoadingController, AlertController} from '@ionic/angular';
-import { ReviewService } from '../../services/review.service';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
+import { supabase } from '../../services/supabase.client';
+import { AuthService, ContractorProfile } from '../../services/auth.service';
+import { ReviewService } from '../../services/review.service';
+
 @Component({
-  standalone: false,
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss']
 })
 export class ProfilePage implements OnInit {
+
+  @ViewChild('fileInput', { static: false })
+  fileInput!: ElementRef<HTMLInputElement>;
+
   userId = '';
-  user: any = {};          // user info including profile image
-  reviewCount: number = 0; // number of reviews
-  userBadge: any; 
-  isLoading = false; 
+  isLoading = false;
+  reviewCount = 0;
+  userBadge: any;
+
+  services: any[] = [];
+  states: any[] = [];
+
   form: ContractorProfile = {
     business_name: '',
-	first_name: '',
-	display_name: '',
-	last_name: '',
+    first_name: '',
+    display_name: '',
+    last_name: '',
     trade: '',
     city: '',
     state: '',
     country: '',
     license_number: '',
+    phone: '',
+    zip: '',
     profile_image_url: ''
   };
-services: any[] = [];
-states: any[] = [];
 
   constructor(
-    private reviewSvc: ReviewService,
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
+    private reviewSvc: ReviewService,
     private toastCtrl: ToastController,
-    private alertController: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {}
 
   async ngOnInit() {
-    this.isLoading = true; // start loading
-    try {
-      this.services = await this.reviewSvc.getServices();
-    } catch (err) {
-      console.error('Failed to load services:', err);
+    this.isLoading = true;
+
+    const user = await this.auth.currentUser();
+    if (user) this.userId = user.id;
+
+    this.services = await this.reviewSvc.getServices();
+    this.states = await this.reviewSvc.getStates();
+
+    const existing = await this.auth.getProfile(this.userId);
+    if (existing) {
+      this.form = { ...existing };
+      if (existing.phone) {
+        this.form.phone = this.formatPhone(existing.phone);
+      }
     }
-    this.route.queryParams.subscribe(async params => {
-      this.userId = params['userId'];
-      if (!this.userId) {
-        const user = await this.auth.currentUser();
-        if (user) this.userId = user.id;
-      }
-      if (!this.userId) {
-        this.isLoading = false;
-        return;
-      }
 
-      const existing = await this.auth.getProfile(this.userId);
-      if (existing) {
-  this.form = { ...existing };
-
-  // format phone for UI
-  if (existing.phone) {
-    this.form.phone = this.formatPhoneValue(existing.phone);
-  }
-}
-
-
-      this.isLoading = false; // stop loading
-    });
-	
-	try {
-    this.states = await this.reviewSvc.getStates(); // fetch from service
-  } catch (err) {
-    console.error('Failed to load states', err);
-    this.presentToast('Failed to load states', 'danger');
-  }
-  
-  try {
+    this.reviewCount = await this.reviewSvc.getUserReviewCount(this.userId);
     this.userBadge = await this.reviewSvc.fetchUserBadge(this.userId);
-  } catch (err) {
-    console.error('Failed to fetch user badge', err);
-  }
-   this.reviewCount = await this.reviewSvc.getUserReviewCount(this.userId);
-  
+
+    this.isLoading = false;
   }
 
-  async presentToast(message: string, color: string = 'primary') {
-    const toast = await this.toastCtrl.create({
-      message,
-      duration: 2500,
-      position: 'bottom',
-      color
-    });
-    await toast.present();
+  /* ---------- FILE PICKER ---------- */
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    await this.uploadImage(input.files[0]);
+    input.value = '';
   }
- async pickImage() {
-  try {
-    const image = await Camera.getPhoto({
-      quality: 70,
+
+  /* ---------- CAMERA ---------- */
+  async pickImage() {
+    const photo = await Camera.getPhoto({
+      source: CameraSource.Camera,
       resultType: CameraResultType.Uri,
-      source: CameraSource.Prompt
+      quality: 75,
+      presentationStyle: 'popover'
     });
 
-    if (!image.webPath) return;
+    if (!photo.webPath) return;
 
-    const res = await fetch(image.webPath);
-    const blob = await res.blob();
+    const blob = await (await fetch(photo.webPath)).blob();
+    const file = new File([blob], `profile.jpg`, { type: 'image/jpeg' });
 
-    const file = new File([blob], `profile_${Date.now()}.jpg`, {
-      type: 'image/jpeg'
-    });
-
-    this.uploadImageFile(file);
-  } catch (e) {
-    console.log('Camera cancelled', e);
+    await this.uploadImage(file);
   }
-}
 
-  async uploadImageFile(file: File) {
-  const file = event.target.files[0];
-  if (!file || !this.userId) return;
+  /* ---------- UPLOAD ---------- */
+  async uploadImage(file: File) {
+    if (!file || !this.userId) return;
 
-  const ext = file.name.split('.').pop();
-  const path = `profile-images/${this.userId}.${ext}`;
+    const ext = file.name.split('.').pop();
+    const path = `profile-images/${this.userId}.${ext}`;
 
-  const loading = await this.loadingCtrl.create({ message: 'Uploading...' });
-  await loading.present();
+    const loading = await this.loadingCtrl.create({ message: 'Uploading...' });
+    await loading.present();
 
-  try {
-    const { error: uploadError } = await supabase.storage
-      .from('profile-images')
-      .upload(path, file, { upsert: true });
+    try {
+      await supabase.storage.from('profile-images').upload(path, file, { upsert: true });
+      const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
 
-    if (uploadError) throw uploadError;
+      this.form.profile_image_url = `${data.publicUrl}?t=${Date.now()}`;
+      await this.auth.upsertProfile(this.userId, { profile_image_url: this.form.profile_image_url });
 
-    const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
-    this.form.profile_image_url = `${data.publicUrl}?t=${Date.now()}`;
-
-    // Optional: also save in DB
-    await this.auth.upsertProfile(this.userId, { ...this.form });
-
-    this.presentToast('Profile image updated!', 'success');
-  } catch (e: any) {
-    this.presentToast(e.message || 'Image upload failed', 'danger');
-  } finally {
-    loading.dismiss();
+      this.toast('Profile image updated');
+    } catch (e: any) {
+      this.toast(e.message || 'Upload failed', 'danger');
+    } finally {
+      loading.dismiss();
+    }
   }
-}
 
   async save() {
-  if (!this.userId) {
-    this.presentToast('No user found', 'danger');
-    return;
-  }
-
-  // Required field validation
-  const required = ['business_name', 'trade', 'city', 'state'] as const;
-  for (const k of required) {
-    if (!(this.form as any)[k]) {
-      this.presentToast(`Please fill ${k.replace('_', ' ')}`, 'warning');
-      return;
+    const phoneRaw = String(this.form.phone).replace(/\D/g, '');
+    if (phoneRaw.length !== 10) {
+      return this.toast('Invalid phone number', 'warning');
     }
-  }
 
-  // --- Phone validation ---
-// --- Phone validation ---
-const phoneRaw = String(this.form.phone || '').replace(/\D/g, '');
-
-const phoneRegex = /^\d{10}$/;
-if (!phoneRegex.test(phoneRaw)) {
-  this.presentToast('Please enter a valid 10-digit US phone number', 'warning');
-  return;
-}
-
-// save raw digits ONLY
-const rawPhoneToSave = phoneRaw;
-
-
-  // --- ZIP validation ---
-  const zipRegex = /^\d{5}$/;
-  if (!zipRegex.test(this.form.zip || '')) {
-    this.presentToast('Please enter a valid 5-digit ZIP code', 'warning');
-    return;
-  }
-
-  const loading = await this.loadingCtrl.create({ message: 'Saving...' });
-  await loading.present();
-
-  try {
-await this.auth.upsertProfile(this.userId, {
-  ...this.form,
-  phone: rawPhoneToSave
-});
-    this.presentToast('Profile saved successfully!', 'success');
-    this.router.navigate(['/tabs/profile']);
-  } catch (e: any) {
-    this.presentToast(e.message || 'Failed to save profile', 'danger');
-  } finally {
-    loading.dismiss();
-  }
-}
-onPhoneInput(event: any) {
-  let input = event.target.value || '';
-
-  // Remove everything that is NOT a number
-  input = input.replace(/\D/g, '');
-
-  // Limit to 10 digits
-  if (input.length > 10) {
-    input = input.substring(0, 10);
-  }
-
-  // Apply formatting only AFTER cleaning digits
-  if (input.length >= 6) {
-    event.target.value = `(${input.substring(0, 3)}) ${input.substring(3, 6)}-${input.substring(6)}`;
-  } else if (input.length >= 3) {
-    event.target.value = `(${input.substring(0, 3)}) ${input.substring(3)}`;
-  } else {
-    event.target.value = input;
-  }
-
-  // Update form
-  this.form.phone = event.target.value;
-}
-
-formatPhoneValue(phone: string | number): string {
-  const p = String(phone).replace(/\D/g, '');
-  if (p.length !== 10) return p;
-  return `(${p.substring(0, 3)}) ${p.substring(3, 6)}-${p.substring(6)}`;
-}
-async confirmDelete() {
-    const alert = await this.alertController.create({
-      header: 'Confirm',
-      message: 'Are you sure you want to submit a delete request for your account?',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel'
-        },
-        {
-          text: 'Yes, Proceed',
-          handler: () => {
-            this.router.navigate(['/delete']);
-          }
-        }
-      ]
+    await this.auth.upsertProfile(this.userId, {
+      ...this.form,
+      phone: phoneRaw
     });
 
-    await alert.present();
+    this.toast('Profile saved');
+  }
+
+  onPhoneInput(e: any) {
+    let v = e.target.value.replace(/\D/g, '').substring(0, 10);
+    if (v.length >= 6) e.target.value = `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;
+    else if (v.length >= 3) e.target.value = `(${v.slice(0,3)}) ${v.slice(3)}`;
+    this.form.phone = e.target.value;
+  }
+
+  formatPhone(v: string) {
+    return `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;
+  }
+
+  async confirmDelete() {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm',
+      message: 'Delete your account?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Yes', handler: () => this.router.navigate(['/delete']) }
+      ]
+    });
+    alert.present();
+  }
+
+  toast(msg: string, color: string = 'success') {
+    this.toastCtrl.create({ message: msg, duration: 2000, color }).then(t => t.present());
   }
 }

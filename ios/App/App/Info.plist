@@ -22,7 +22,11 @@
   <string>1.1.2</string>
   <key>CFBundleVersion</key>
   <string>13</string>
+<key>NSCameraUsageDescription</key>
+<string>We need camera access to update your profile picture.</string>
 
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need photo library access to upload profile images.</string>
   <!-- Device Requirements -->
   <key>LSRequiresIPhoneOS</key>
   <true/>

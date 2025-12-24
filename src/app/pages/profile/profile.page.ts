@@ -8,6 +8,7 @@ import { AuthService, ContractorProfile } from '../../services/auth.service';
 import { ReviewService } from '../../services/review.service';
 
 @Component({
+  standalone: false,
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss']

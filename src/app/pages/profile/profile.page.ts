@@ -4,6 +4,8 @@ import { supabase } from '../../services/supabase.client';
 import { AuthService, ContractorProfile } from '../../services/auth.service';
 import { ToastController, LoadingController, AlertController} from '@ionic/angular';
 import { ReviewService } from '../../services/review.service';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 @Component({
   standalone: false,
   selector: 'app-profile',
@@ -98,8 +100,30 @@ states: any[] = [];
     });
     await toast.present();
   }
+ async pickImage() {
+  try {
+    const image = await Camera.getPhoto({
+      quality: 70,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Prompt
+    });
 
-  async uploadImage(event: any) {
+    if (!image.webPath) return;
+
+    const res = await fetch(image.webPath);
+    const blob = await res.blob();
+
+    const file = new File([blob], `profile_${Date.now()}.jpg`, {
+      type: 'image/jpeg'
+    });
+
+    this.uploadImageFile(file);
+  } catch (e) {
+    console.log('Camera cancelled', e);
+  }
+}
+
+  async uploadImageFile(file: File) {
   const file = event.target.files[0];
   if (!file || !this.userId) return;
 

@@ -29,8 +29,7 @@
       </ion-avatar>
 
       <!-- Hidden File Input -->
-      <input type="file" #fileInput hidden (change)="uploadImage($event)" />
-
+      <ion-icon name="pencil-outline" class="edit-avatar-icon" (click)="fileInput.click()"></ion-icon>
       <!-- Edit Icon Overlay -->
       <ion-icon
         name="pencil-outline"

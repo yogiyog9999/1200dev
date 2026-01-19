@@ -26,6 +26,8 @@ target 'App' do
   capacitor_pods
   # Add your Pods here
   pod 'Firebase/Messaging'
+  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
 end
 
 post_install do |installer|

@@ -1,0 +1,127 @@
+<app-global-header></app-global-header>
+
+<ion-content>
+  <div class="main-container">
+
+    <!-- Top Bar -->
+    <div class="search-bar">
+      <h2>Search Reviews</h2>
+      <ion-button fill="clear" (click)="toggleFilters()">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Filters (default visible) -->
+    <div class="filters" *ngIf="showFilters">
+      <ion-item>
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-input [(ngModel)]="q" placeholder="Name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="location-outline"></ion-icon>
+        <ion-input [(ngModel)]="postal" placeholder="Zip Code"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="construct-outline"></ion-icon>
+        <ion-select [(ngModel)]="proj" placeholder="Service Type">
+          <ion-select-option *ngFor="let s of services" [value]="s.name">{{ s.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon slot="start" name="star-outline"></ion-icon>
+        <ion-select [(ngModel)]="minRating" placeholder="Min Rating">
+          <ion-select-option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}+</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" (click)="applyFilters()">
+        Search
+      </ion-button>
+    </div>
+
+    <!-- Active Filters Summary -->
+    <div class="active-filters" *ngIf="!showFilters && (q || postal || proj || minRating)">
+      <ion-chip *ngIf="q">
+        <ion-label>Name: {{ q }}</ion-label>
+        <ion-icon name="close-circle" (click)="q=''; applyFilters()"></ion-icon>
+      </ion-chip>
+      <ion-chip *ngIf="postal">
+        <ion-label>Zip: {{ postal }}</ion-label>
+        <ion-icon name="close-circle" (click)="postal=''; applyFilters()"></ion-icon>
+      </ion-chip>
+      <ion-chip *ngIf="proj">
+        <ion-label>Type: {{ proj }}</ion-label>
+        <ion-icon name="close-circle" (click)="proj=''; applyFilters()"></ion-icon>
+      </ion-chip>
+      <ion-chip *ngIf="minRating">
+        <ion-label>Min Rating: {{ minRating }}+</ion-label>
+        <ion-icon name="close-circle" (click)="minRating=null; applyFilters()"></ion-icon>
+      </ion-chip>
+
+      <!-- Reset All -->
+      <ion-button fill="clear" size="small" (click)="resetFilters()">Reset Filters</ion-button>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-count" *ngIf="!loading">
+      <p *ngIf="results.length > 0">
+        Found {{ results.length }} {{ results.length === 1 ? 'result' : 'results' }}
+        <span *ngIf="q">for "<strong>{{ q }}</strong>"</span>
+      </p>
+      <p *ngIf="results.length === 0 && (q || postal || proj || minRating)">
+        No results found
+        <span *ngIf="q">for "<strong>{{ q }}</strong>"</span>
+      </p>
+    </div>
+
+    <!-- Results List -->
+    <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+     <div class="view-toggle">
+  <ion-segment [(ngModel)]="viewMode" (ionChange)="onViewModeChange()">
+    <ion-segment-button value="list">
+      <ion-label>List</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="map">
+      <ion-label>Map</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</div>
+
+<!-- Map Container -->
+<div [class.hidden]="viewMode !== 'map'" class="map-container">
+  <div id="reviewMap" style="height: 400px;"></div>
+
+  <ion-spinner *ngIf="mapLoading" class="map-loader"></ion-spinner>
+  <div *ngIf="mapLoading" class="map-overlay">Loading map…</div>
+</div>
+
+    <ion-list *ngIf="!loading && results.length > 0">
+      <ion-card class="review-card"
+        *ngFor="let r of results"
+        (click)="openReviewDetails(r.id)">
+        <ion-card-content>
+          <h4 class="hname">{{ r.homeowner_first_name}} {{ r.homeowner_last_name}}</h4>
+          <p><strong>Type of Interaction: {{ r.project_type }}</strong></p>
+          <p>Date of Interaction {{ r.project_date | date:'MM/dd/yyyy' }}</p>
+          <div class="stars">
+            <ion-icon *ngFor="let star of [1,2,3,4,5]"
+              [name]="star <= r.avg_score ? 'star' :
+                     (star - 0.5 <= r.avg_score ? 'star-half' : 'star-outline')"
+              color="warning">
+            </ion-icon>
+            <span>{{ r.avg_score }}/5</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+<div class="pagination-container" *ngIf="!loading && results.length > 0 && hasMore">
+  <ion-button expand="block" fill="outline" (click)="loadMore()">
+    Load More
+  </ion-button>
+</div>
+  </div>
+</ion-content>
+

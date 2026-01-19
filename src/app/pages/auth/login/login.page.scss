@@ -1,0 +1,117 @@
+/* Make ion-content act like a full-screen flexbox */
+ion-content.auth-content {
+  --background: #f6f6f6; /* optional light background */
+  display: flex;
+  justify-content: center;  /* center horizontally */
+  align-items: center;      /* center vertically */
+  height: 100%;             /* full height */
+}
+
+.auth-container {
+  width: 100%;
+  background: #fff;
+  /*padding: 30px 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);*/
+  text-align: center; 
+  height:calc(100% - 88px);
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    /*justify-content: center;*/
+}
+
+
+ion-title.header-title {
+    text-align: center;
+}
+
+.logo-section {
+  margin-bottom: 15px;
+}
+
+.logo-section .app-logo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.logo-section .app-logo .highlight {
+  color: #e85a2a;
+}
+
+.welcome-text {
+  margin-bottom: 20px;
+}
+
+.welcome-text h2 {
+  margin: 0;
+  /*font-weight: 600;*/
+}
+
+.welcome-text .app-title {
+  font-size: 20px;
+}
+
+.welcome-text .subtitle {
+  font-size: 20px;
+  color: #000;
+  margin-top: 8px;
+}
+
+.input-item {
+  margin: 12px 0;
+  border: 1px solid #C0C0C0;
+  border-radius: 10px;
+  background:#F9F9F9  
+}
+
+.item-native{
+  background:#F9F9F9
+}
+
+
+ion-input{
+  margin:0;
+   border: none;
+  border-radius: 0px;
+  }
+
+
+
+.login-btn {
+  margin: 15px 0 20px;
+  --background: #e85a2a;
+  text-transform: none;
+}
+
+.switch-text{
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+.switch-text a{
+  font-weight: 600;
+  color: #000;text-decoration: underline;
+}
+
+.forgot-text {
+  font-size: 14px;
+  margin-top: 12px;
+}
+.forgot-text a {
+  font-weight: 400;
+  color: #000;text-decoration: underline;
+}
+
+.privacy-text {
+  font-size: 14px;
+  margin-top: 20px;
+  color: #666;
+}
+
+.privacy-text a {
+  color: #333;
+  text-decoration: underline;
+}
+.switch-text a:hover,
+.forgot-text a:hover,
+.privacy-text a:hover{color:#e75929}

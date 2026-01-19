@@ -1,0 +1,40 @@
+<ion-content>
+  <div class="main-container">
+
+    <h2>Add New User</h2>
+
+    <ion-card>
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="stacked">Full Name</ion-label>
+          <ion-input [(ngModel)]="name" placeholder="Enter full name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input [(ngModel)]="email" type="email" placeholder="Enter email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input [(ngModel)]="password" type="password" placeholder="Enter password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Role</ion-label>
+          <ion-select [(ngModel)]="role" placeholder="Select role">
+            <ion-select-option value="admin">Admin</ion-select-option>
+            <ion-select-option value="superadmin">Superadmin</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="block" color="primary" (click)="addUser()">Add User</ion-button>
+        <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+        <ion-text color="success" *ngIf="success">{{ success }}</ion-text>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

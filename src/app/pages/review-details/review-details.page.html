@@ -1,0 +1,270 @@
+<app-global-header></app-global-header>
+
+<ion-content class="review-details-page">
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading review details...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container" *ngIf="!isLoading">
+
+    <!-- Homeowner Info -->
+    <div class="review-header" *ngIf="homeowner">
+      <h1>Review Details</h1>
+
+      <h5>{{ homeowner?.name }}</h5>
+
+      <div class="info-grid">
+
+  <p><strong>First Name:</strong> {{ homeowner?.first_name }}</p>
+  <p><strong>Last Name:</strong> {{ homeowner?.last_name }}</p>
+
+  <p><strong>Address:</strong> {{ homeowner?.address }}</p>
+  <p><strong>City:</strong> {{ homeowner?.city }}</p>
+
+  <p><strong>State:</strong> {{ homeowner?.state }}</p>
+  <p><strong>Zip:</strong> {{ homeowner?.zip }}</p>
+
+  <p><strong>Type of Interaction:</strong> {{ homeowner?.project_type }}</p>
+  <p><strong>Date of Interaction:</strong> {{ homeowner?.project_date }}</p>
+
+</div>
+
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box" *ngIf="reviews.length > 0">
+      <div class="summary-item">
+        <ion-icon name="star" color="warning"></ion-icon>
+        <span>{{ overallAvg }}/5</span>
+      </div>
+      <div class="summary-item">
+        <span>Total Reviews: {{ reviews.length }}</span>
+      </div>
+    </div>
+
+    <!-- Review Cards -->
+    <ion-card *ngFor="let review of reviews" class="review-card">
+
+      <ion-item lines="none" *ngIf="!review.hide_name">
+        <ion-avatar slot="start">
+          <img [src]="review.profile_image_url || 'assets/logo.png'" />
+        </ion-avatar>
+
+        <ion-label>
+          <h2>
+            <a [routerLink]="['/contractor', review.contractor_id]">
+              {{ review.display_name }}
+            </a>
+          </h2>
+
+          <p>{{ review.project_type }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-card-content>
+
+        <!-- STAR AVERAGE -->
+        <h2 class="avg-score">⭐ {{ review.avg_score }}/5</h2>
+
+        <!-- ⭐ SOCIAL TYPE RATINGS -->
+        <!-- ⭐ SOCIAL TYPE RATINGS WITH STARS -->
+<div *ngIf="review.project_type === 'Social' || review.project_type === 'Social'" class="ratings">
+
+  <div class="rating-row" *ngIf="review.rating_approach">
+    <strong>Approachability:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_approach || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_approach }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_respect">
+    <strong>Respect & Courtesy:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_respect || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_respect }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_communication_style">
+    <strong>Communication Style:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_communication_style || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_communication_style }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_composure">
+    <strong>Emotional Composure:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_composure || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_composure }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_trust">
+    <strong>Trustworthiness:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_trust || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_trust }}/5</span>
+  </div>
+
+</div>
+
+
+        <!-- ⭐ CONSTRUCTION TYPE RATINGS -->
+        <!-- 🛠 CONSTRUCTION RATINGS WITH STARS -->
+<div *ngIf="review.project_type !== 'Social' && review.project_type !== 'Social'" class="ratings">
+
+  <div class="rating-row" *ngIf="review.rating_payment">
+    <strong>Payment:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_payment || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_payment }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_communication">
+    <strong>Communication:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_communication || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_communication }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_scope">
+    <strong>Scope Understanding:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_scope || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_scope }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_change_orders">
+    <strong>Change Orders:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_change_orders || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_change_orders }}/5</span>
+  </div>
+
+  <div class="rating-row" *ngIf="review.rating_overall">
+    <strong>Overall Experience:</strong>
+    <div class="star-rating">
+      <div class="stars-outer">★★★★★</div>
+      <div class="stars-inner" [style.width.%]="((review.rating_overall || 0)/5)*100">★★★★★</div>
+    </div>
+    <span>{{ review.rating_overall }}/5</span>
+  </div>
+
+</div>
+
+
+        <!-- Comments -->
+        <div *ngIf="homeowner?.comments" class="review-text">
+          <strong>Review</strong>
+          <p>{{ homeowner?.comments }}</p>
+        </div>
+
+        <!-- Attachments -->
+       <!-- Attachments -->
+<div class="attachment" *ngIf="homeowner?.files">
+  <strong>Attachments</strong>
+
+  <div class="file-list">
+    <div *ngFor="let file of homeowner?.files | jsonParse" class="file-item">
+
+      <!-- Show Images -->
+      <ng-container *ngIf="isImage(file)">
+        <ion-thumbnail (click)="openPreview(file)">
+          <img [src]="file" />
+        </ion-thumbnail>
+      </ng-container>
+
+      <!-- Show Videos -->
+      <ng-container *ngIf="isVideo(file)">
+        <video width="120" height="80" controls (click)="openVideo(file)">
+          <source [src]="file" type="video/mp4" />
+        </video>
+      </ng-container>
+
+      <!-- Other files -->
+      <ng-container *ngIf="!isImage(file) && !isVideo(file)">
+        <ion-icon [name]="getFileIcon(file)"></ion-icon>
+        <a [href]="file" target="_blank">{{ getFileName(file) }}</a>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
+<!-- Video Preview Modal -->
+<ion-modal [isOpen]="previewVideo !== null" (didDismiss)="closeVideo()">
+  <ng-template>
+    <ion-content fullscreen>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="closeVideo()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+
+      <div class="preview-container">
+        <video width="100%" height="auto" controls autoplay>
+          <source [src]="previewVideo" type="video/mp4" />
+        </video>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Image Preview Modal -->
+    <ion-modal [isOpen]="previewImage !== null" (didDismiss)="closePreview()">
+      <ng-template>
+        <ion-content fullscreen>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button (click)="closePreview()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+
+          <div class="preview-container">
+            <img [src]="previewImage" />
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+  </div>
+</ion-content>
+
+<style>
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+.avg-score {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+</style>

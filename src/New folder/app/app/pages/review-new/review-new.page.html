@@ -1,0 +1,168 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="transparent">
+    <ion-title class="page-title">New Review</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="review-content">
+
+  <!-- Background -->
+  <div class="review-background"></div>
+
+  <!-- Glass Card -->
+  <div class="review-card animate__animated animate__fadeInUp">
+
+    <!-- Homeowner ID -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-input label="Homeowner ID" label-placement="floating" [(ngModel)]="homeowner_id"></ion-input>
+    </ion-item>
+
+    <!-- Project Type -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="construct-outline" slot="start"></ion-icon>
+      <ion-input label="Project Type" label-placement="floating" [(ngModel)]="project_type"></ion-input>
+    </ion-item>
+
+    <!-- Project Date -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-input type="date" label="Project Date" label-placement="floating" [(ngModel)]="project_date"></ion-input>
+    </ion-item>
+
+    <!-- Ratings -->
+    <div class="rating-section">
+      <h3>Rate Homeowner</h3>
+      <ion-item lines="none" class="rating-item">
+        <ion-label>Payment</ion-label>
+        <ion-range min="1" max="5" snaps="true" ticks="true" [(ngModel)]="rating_payment" color="secondary"></ion-range>
+      </ion-item>
+      <ion-item lines="none" class="rating-item">
+        <ion-label>Communication</ion-label>
+        <ion-range min="1" max="5" snaps="true" ticks="true" [(ngModel)]="rating_communication" color="tertiary"></ion-range>
+      </ion-item>
+      <ion-item lines="none" class="rating-item">
+        <ion-label>Scope Clarity</ion-label>
+        <ion-range min="1" max="5" snaps="true" ticks="true" [(ngModel)]="rating_scope" color="warning"></ion-range>
+      </ion-item>
+      <ion-item lines="none" class="rating-item">
+        <ion-label>Change Orders</ion-label>
+        <ion-range min="1" max="5" snaps="true" ticks="true" [(ngModel)]="rating_change_orders" color="danger"></ion-range>
+      </ion-item>
+      <ion-item lines="none" class="rating-item">
+        <ion-label>Overall</ion-label>
+        <ion-range min="1" max="5" snaps="true" ticks="true" [(ngModel)]="rating_overall" color="success"></ion-range>
+      </ion-item>
+    </div>
+
+    <!-- Comments -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+      <ion-textarea label="Comments" label-placement="floating" autoGrow="true" [(ngModel)]="comments"></ion-textarea>
+    </ion-item>
+
+    <!-- File Upload -->
+    <div class="upload-section">
+      <ion-button expand="block" fill="outline" class="upload-btn">
+        <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+        Upload Files
+        <input type="file" (change)="onFileChange($event)" multiple hidden />
+      </ion-button>
+    </div>
+
+    <!-- Submit Button -->
+    <ion-button expand="block" (click)="submit()" class="submit-btn">
+      <ion-icon name="send-outline" slot="start"></ion-icon>
+      Submit Review
+    </ion-button>
+
+    <!-- Error -->
+    <ion-text color="danger" *ngIf="error" class="error-text">{{ error }}</ion-text>
+  </div>
+</ion-content>
+<style>
+.review-content {
+  --background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.review-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  z-index: -1;
+}
+
+.page-title {
+  font-weight: bold;
+  color: #fff;
+}
+
+.review-card {
+  width: 90%;
+  margin: 20px auto;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.input-item {
+  margin-bottom: 15px;
+  border-radius: 12px;
+  --background: rgba(255,255,255,0.1);
+  --color: #fff;
+}
+
+ion-input, ion-textarea, ion-icon, ion-label {
+  color: #fff !important;
+}
+
+.rating-section {
+  margin: 15px 0;
+  color: #fff;
+}
+
+.rating-item {
+  margin-bottom: 8px;
+  border-radius: 10px;
+  --background: rgba(255,255,255,0.1);
+}
+
+.upload-section {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.upload-btn {
+  border-radius: 12px;
+  color: #fff;
+  border: 2px dashed #fff;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #ff512f, #dd2476);
+  box-shadow: 0 5px 15px rgba(221,36,118,0.4);
+  transition: transform 0.2s ease;
+}
+
+.submit-btn:active {
+  transform: scale(0.95);
+}
+
+.error-text {
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>

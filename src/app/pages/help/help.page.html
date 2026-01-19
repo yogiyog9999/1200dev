@@ -1,0 +1,72 @@
+<ion-content class="auth-content">
+  <ion-header class="custom-header ion-no-border">
+    <ion-toolbar>
+	  <ion-buttons slot="start">
+  <ion-button (click)="goBack()">
+    <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+  </ion-button>
+</ion-buttons>
+      <ion-title class="header-title">
+        <img src="assets/logo.png" alt="App Logo" class="logo-img" />
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="auth-container main-container">
+    <h2>Need Help?</h2>
+    <p>Describe your issue below and we’ll get back to you.</p>
+
+    <form (ngSubmit)="sendHelpEmail()" class="help-form">
+	   <ion-item class="input-item" lines="none">
+        <ion-icon name="chatbox-outline" slot="start"></ion-icon>
+        <ion-input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Name"
+          required
+        ></ion-input>
+      </ion-item>
+	   <ion-item class="input-item" lines="none">
+        <ion-icon name="chatbox-outline" slot="start"></ion-icon>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Email"
+          required
+        ></ion-input>
+      </ion-item>
+      <ion-item class="input-item" lines="none">
+        <ion-icon name="chatbox-outline" slot="start"></ion-icon>
+        <ion-input
+          type="text"
+          [(ngModel)]="subject"
+          name="subject"
+          placeholder="Subject"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item" lines="none">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        <ion-textarea
+          [(ngModel)]="message"
+          name="message"
+          placeholder="Describe your issue..."
+          required
+          autoGrow="true"
+        ></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" [disabled]="loading">
+        <ion-spinner *ngIf="loading" slot="start"></ion-spinner>
+        Send Message
+      </ion-button>
+
+      <!-- Success & Error Messages -->
+      <ion-text color="success" *ngIf="successMessage">{{ successMessage }}</ion-text>
+      <ion-text color="danger" *ngIf="errorMessage">{{ errorMessage }}</ion-text>
+    </form>
+  </div>
+</ion-content>

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Search Reviews</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Search Filters -->
+  <ion-item>
+    <ion-input placeholder="Search..." [(ngModel)]="q"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input placeholder="Postal Code" [(ngModel)]="postal"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input placeholder="Project Type" [(ngModel)]="proj"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="number" placeholder="Min Rating" [(ngModel)]="minRating"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="onSearch()" [disabled]="loading">
+    <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+    <span *ngIf="!loading">Search</span>
+  </ion-button>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <!-- Results -->
+  <ion-list *ngIf="results.length">
+    <ion-item *ngFor="let r of results">
+      <ion-label>
+        <h2>{{ r.homeowners?.name || 'Homeowner' }}</h2>
+        <p>{{ r.project_type }} — Avg: {{ r.avg_score }} — Status: {{ r.status }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Load More -->
+  <ion-button *ngIf="hasMore && !loading" expand="block" (click)="loadReviews()">
+    Load More
+  </ion-button>
+
+  <div *ngIf="!results.length && !loading && !error" class="empty">
+    <p>No reviews found.</p>
+  </div>
+</ion-content>

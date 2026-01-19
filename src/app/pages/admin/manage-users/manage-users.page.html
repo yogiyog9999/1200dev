@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Manage Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        {{ user.first_name }} {{ user.last_name }} ({{ user.role }}) - {{ user.email }}
+      </ion-label>
+      <ion-button *ngIf="user.role === 'user'" (click)="promoteToAdmin(user.id)">
+        Promote to Admin
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

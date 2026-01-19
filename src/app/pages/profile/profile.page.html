@@ -1,0 +1,226 @@
+<ion-content class="profile-page">
+  <app-global-header></app-global-header>
+
+  <!-- Loader -->
+  <ng-container *ngIf="isLoading; else profileFormContent">
+    <ion-spinner name="crescent" class="center-spinner"></ion-spinner>
+  </ng-container>
+
+  <ng-template #profileFormContent>
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+
+      <!-- Top Header -->
+      <div class="profile-card-header">
+        <h1>Personal Profile</h1>
+      </div>
+
+      <!-- Avatar + Name Row -->
+      <div class="profile-wrapper main-container">
+        <div class="profile-info">
+
+          <div class="avatar-wrapper">
+            <ion-avatar class="avatar">
+              <img
+                [src]="form.profile_image_url || 'assets/placeholder-avatar.png'"
+              />
+
+              <!-- Badge overlay -->
+              <img
+                *ngIf="userBadge"
+                [src]="userBadge.image_url"
+                class="badge-img"
+                alt="{{ userBadge.name }} Badge"
+              />
+            </ion-avatar>
+
+            <!-- Hidden File Input -->
+            <input
+              type="file"
+              #fileInput
+              hidden accept="image/*"
+              (change)="uploadImage($event)"
+            />
+
+            <!-- Edit Icon Overlay -->
+            <ion-icon
+              name="pencil-outline"
+              class="edit-avatar-icon"
+              (click)="fileInput.click()"
+            ></ion-icon>
+          </div>
+
+          <div class="profile-name">
+            <h2 class="profile-title">{{ form.display_name }}</h2>
+            <p *ngIf="userBadge">{{ userBadge.name }} Badge</p>
+            <p>Reviews: {{ reviewCount }}</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-wrapper main-container">
+      <form (ngSubmit)="save()">
+
+        <ion-list lines="none" class="profile-form">
+
+          <!-- Display Name -->
+          <ion-item class="input-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="Display Name"
+              [(ngModel)]="form.display_name"
+              name="display_name">
+            </ion-input>
+          </ion-item>
+
+          <!-- First Name -->
+          <ion-item class="input-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="First Name"
+              [(ngModel)]="form.first_name"
+              name="first_name">
+            </ion-input>
+          </ion-item>
+
+          <!-- Last Name -->
+          <ion-item class="input-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="Last Name"
+              [(ngModel)]="form.last_name"
+              name="last_name">
+            </ion-input>
+          </ion-item>
+
+          <!-- Phone -->
+          <ion-item class="input-item">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            <ion-input
+              type="tel"
+              placeholder="Phone Number"
+              [(ngModel)]="form.phone"
+              name="phone"
+              maxlength="14"
+              (ionInput)="onPhoneInput($event)">
+            </ion-input>
+          </ion-item>
+
+          <!-- Business Name -->
+          <ion-item class="input-item">
+            <ion-icon name="business-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="Business Name"
+              [(ngModel)]="form.business_name"
+              name="business_name">
+            </ion-input>
+          </ion-item>
+
+          <!-- Trade -->
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="construct-outline" slot="start"></ion-icon>
+            <ion-select
+              placeholder="Trade"
+              [(ngModel)]="form.trade"
+              name="trade">
+              <ion-select-option
+                *ngFor="let service of services"
+                [value]="service.name">
+                {{ service.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- City -->
+          <ion-item class="input-item">
+            <ion-icon name="location-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="City"
+              [(ngModel)]="form.city"
+              name="city">
+            </ion-input>
+          </ion-item>
+
+          <!-- Zip -->
+          <ion-item class="input-item">
+            <ion-icon name="map-outline" slot="start"></ion-icon>
+            <ion-input
+              type="text"
+              placeholder="Zip"
+              [(ngModel)]="form.zip"
+              name="zip"
+              maxlength="5"
+              inputmode="numeric">
+            </ion-input>
+          </ion-item>
+
+          <!-- State -->
+          <ion-item class="input-item">
+            <ion-icon name="flag-outline" slot="start"></ion-icon>
+            <ion-select
+              placeholder="Select State"
+              [(ngModel)]="form.state"
+              name="state"
+              interface="popover">
+              <ion-select-option
+                *ngFor="let state of states"
+                [value]="state.code"
+                [disabled]="!state.enabled">
+                {{ state.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- License -->
+          <ion-item class="input-item">
+            <ion-icon name="id-card-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="License#"
+              [(ngModel)]="form.license_number"
+              name="license_number">
+            </ion-input>
+          </ion-item>
+
+        </ion-list>
+
+        <!-- Buttons -->
+        <ion-button expand="block" type="submit" class="save-btn">
+          Save Profile
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="dark"
+          class="secondary-btn"
+          routerLink="/tabs/setting">
+          Edit Preferences
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="dark"
+          class="secondary-btn"
+          routerLink="/tabs/notifications">
+          Notifications
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="dark"
+          class="secondary-btn"
+          (click)="confirmDelete()">
+          Delete Account
+        </ion-button>
+
+      </form>
+    </div>
+
+  </ng-template>
+</ion-content>

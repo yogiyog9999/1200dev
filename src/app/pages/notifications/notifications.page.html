@@ -1,0 +1,30 @@
+<app-global-header></app-global-header>
+
+
+<ion-content>
+  <div class="main-container">
+     <div class="notification-header">
+      <h1>Notifications</h1>
+       </div>
+  <!-- If notifications exist -->
+  <ion-list class="list_notificatons" *ngIf="notifications.length > 0; else noNotifications">
+    <ion-item *ngFor="let n of notifications" (click)="markAsRead(n.id)">
+      <ion-label>
+        <small class="notificaton-date">{{ n.created_at | date:'short' }}</small>
+        <h6 class="notificaton-heading">{{ n.title }}</h6>
+        <p class="notificaton-text">{{ n.body }}</p>
+      </ion-label>
+      <ion-badge color="danger" *ngIf="!n.read">New</ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <!-- Fallback template when no notifications -->
+  <ng-template #noNotifications>
+    <div class="no-notifications">
+      <ion-icon name="notifications-off-outline" class="no-icon"></ion-icon>
+      <p>No notifications yet</p>
+    </div>
+  </ng-template>
+</div>
+</ion-content>
+

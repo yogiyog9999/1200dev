@@ -1,0 +1,218 @@
+.profile-page {
+  --background: #fff;
+  padding: 20px;
+}
+
+/* Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 55px;
+  height: 55px;
+  border: 2px solid #eee;
+}
+
+.profile-name h2 {
+  margin: 0;
+  font-size:20px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.edit-icon {
+  font-size: 16px;
+  margin-left: 6px;
+  color: #666;
+  cursor: pointer;
+}
+
+/* Input Fields */
+.profile-form {
+  margin-bottom: 15px;
+}
+
+.input-item {
+  border: 1px solid #C0C0C0;
+  background: #F9F9F9;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  --padding-start: 8px;
+  --inner-padding-end: 8px;
+}
+
+.input-item ion-input {
+  font-size: 14px;
+}
+
+/* Buttons */
+.save-btn {
+  --background: #ff5722; /* Orange like screenshot */
+  --border-radius: 10px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.secondary-btn {
+  --background: #222;
+  --border-radius: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+
+}
+
+.secondary-btn a{
+  padding-left:20px;
+  padding-right:20px;
+}
+
+.secondary-btn aspan{}
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border: 2px solid #eee;
+}
+
+.edit-avatar-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ff5722;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+
+
+
+
+.profile-card {
+  
+  overflow: hidden;
+  background: #fff;
+  /*box-shadow: 0 4px 12px rgba(0,0,0,0.08);*/
+  background: #241F23;
+background: linear-gradient(180deg,#241F23 65%, #fff 0%);
+}
+
+.profile-wrapper{
+  background: transparent;
+  padding-bottom:0;
+  }
+
+.profile-card-header {
+  /*background: #241F23;*/
+  color: #fff;
+  text-align: center;
+  padding: 10px 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  /*padding-bottom: 50px;*/
+}
+
+.profile-info {
+  display: flex;
+    align-items: center;
+    background: #FEF5F0;
+    padding: 16px;
+    position: relative;
+    width: 100%;
+    margin: 0px auto;
+    border-radius: 10px;
+    border:1px solid #F0F0F0;
+    /*margin-top: -50px;
+    margin-bottom: 23px;*/
+}
+
+.avatar-wrapper {
+  position: relative;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  /*border: 2px solid #fff;  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);*/
+}
+
+.edit-avatar-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 50%;
+  font-size: 16px;
+  padding: 4px;
+  cursor: pointer;
+  color: #666;
+}
+
+.profile-name {
+  margin-left: 12px;
+}
+
+.profile-title {
+ font-size: 20px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #EF6229; // orange name
+}
+
+.profile-form {
+  padding: 0px;
+  background: #fff;
+}
+
+ion-item {
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  --inner-padding-end: 8px;
+  --padding-start: 8px;
+}
+
+ion-icon {
+  color: #666;
+}
+.profile-card-header h1 {
+    color: #fff;
+    margin:10px 0 0;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+ion-avatar.avatar {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.badge-img {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #fff; /* optional: nice border */
+  background-color: white; /* optional */
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}

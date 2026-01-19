@@ -1,0 +1,83 @@
+<ion-content class="auth-content">
+<ion-header class="custom-header ion-no-border">
+  <ion-toolbar>
+
+    <!-- Center Title -->
+   <ion-title class="header-title">
+      <img src="assets/logo.png" alt="App Logo" class="logo-img" />
+    </ion-title>
+	
+  </ion-toolbar>
+  
+</ion-header>
+
+  <div class="auth-container main-container">
+
+    <!-- Logo -->
+        <!-- Welcome Text -->
+    <div class="welcome-text">
+      <h2>Welcome To</h2>
+      <h2 class="app-title">D List App</h2>
+      <p class="subtitle">Find out who is D Listed</p>
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="login()" class="login-form">
+
+      <!-- Email -->
+      <ion-item class="input-item" lines="none">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-input type="email" [(ngModel)]="email" name="email" placeholder="Email" required></ion-input>
+      </ion-item>
+
+      <!-- Password -->
+      <!-- Password -->
+<ion-item class="input-item" lines="none">
+  <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+  
+  <!-- Input with dynamic type -->
+  <ion-input 
+    [type]="showPassword ? 'text' : 'password'" 
+    [(ngModel)]="password" 
+    name="password" 
+    placeholder="Password" 
+    required>
+  </ion-input>
+
+  <!-- Toggle Eye Icon -->
+  <ion-icon 
+    [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" 
+    slot="end" 
+    (click)="togglePasswordVisibility()">
+  </ion-icon>
+</ion-item>
+
+
+      <!-- Login Button -->
+      <ion-button expand="block" type="submit" [disabled]="loading" class="login-btn">
+        <ion-spinner *ngIf="loading" slot="start"></ion-spinner>
+        Login
+      </ion-button>
+
+      <!-- Error Message -->
+      <ion-text color="danger" *ngIf="error" class="error-text">
+        {{ error }}
+      </ion-text>
+
+      <!-- Links -->
+      <p class="switch-text">
+        Don’t have an account? <a (click)="gotoRegister()">Register</a>
+      </p>
+      <p class="forgot-text">
+        <a (click)="forgotPassword()">Forgot Password?</a>
+      </p>
+    </form>
+
+    <!-- Privacy -->
+    <p class="privacy-text">
+      <a href="https://dlistapp.net/privacy-policy.html" target="_blank">Privacy Policy</a> | <a (click)="gotohelp()">Help</a>
+    </p>
+
+  </div>
+
+</ion-content>

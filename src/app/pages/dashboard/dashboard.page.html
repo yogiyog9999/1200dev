@@ -1,0 +1,98 @@
+<ion-content class="dashboard-page">
+  <app-global-header></app-global-header>
+
+  <div class="dashboard-section main-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Dashboard</h1>
+      <h4 class="welcome-text">Welcome {{ contractor?.first_name || '' }}</h4>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-grid">
+      <button class="action-btn" routerLink="/tabs/profile">
+        <ion-icon name="create-outline"></ion-icon>
+        Edit Profile
+      </button>
+      <button class="action-btn" routerLink="/tabs/myreview">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        My Reviews
+      </button>
+      <button class="action-btn" routerLink="/tabs/write">
+        <ion-icon name="pencil-outline"></ion-icon>
+        Write a Review
+      </button>
+      <button class="action-btn" (click)="goHomeowners()">
+  <ion-icon name="home-outline"></ion-icon>
+  Search Reviews
+</button>
+    </div>
+
+    <!-- Rating Overview -->
+    <div class="block-card ">
+      <h4 class="section-title">Rating Overview</h4>
+      <div *ngIf="isLoading; else ratingContent" class="flex-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <ng-template #ratingContent>
+        <p>
+          Overall rating by you 
+           <ion-icon name="star" color="warning"></ion-icon>
+          <strong> {{ avgRating || '0.0' }}/5</strong>
+        </p>
+        <p>Total reviews posted <strong> {{ totalReviews || 0 }}</strong> Reviews</p>
+      </ng-template>
+    </div>
+
+    <!-- Latest Reviews -->
+    <!-- Latest Reviews -->
+<div class="block-card latest_review">
+  <h4 class="section-title">Latest Reviews</h4>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading; else reviewsContent" class="flex-center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Reviews Content -->
+  <ng-template #reviewsContent>
+    <!-- If no reviews -->
+    <div *ngIf="!reviewedHomeowners?.length; else reviewsList" class="no-reviews">
+      <ion-icon name="chatbubble-ellipses-outline" color="medium"></ion-icon>
+      <p>No reviews yet. Start by writing your first one!</p>
+      <ion-button routerLink="/tabs/write" fill="outline" color="primary" size="small">
+        Write a Review
+      </ion-button>
+    </div>
+
+    <!-- Review List -->
+    <ng-template #reviewsList>
+      <div
+        class="review-card"
+        *ngFor="let review of reviewedHomeowners"
+        (click)="openReviewDetails(review.reviewid)"
+      >
+        <h5>{{ review.fname }} {{ review.lname }}</h5>
+        <p>Type of Interaction: {{ review.projectType }}</p>
+        <p>Date of Interaction {{ review.projectDate }}</p>
+        <div class="stars">
+          <ion-icon
+            *ngFor="let s of [1, 2, 3, 4, 5]"
+            [name]="
+              s <= review.avgScore
+                ? 'star'
+                : s - 0.5 <= review.avgScore
+                ? 'star-half'
+                : 'star-outline'
+            "
+            color="warning"
+          ></ion-icon>
+          <span>{{ review.avgScore }}/5</span>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,11 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p>Welcome!</p>
+  <p *ngIf="me">Logged in as: {{ me.email }}</p>
+  <ion-button routerLink="/logout" fill="outline">Logout</ion-button>
+</ion-content>

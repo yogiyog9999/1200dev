@@ -1,0 +1,65 @@
+<ion-content class="myreview-page">
+  <app-global-header></app-global-header>
+
+  <div class="myreview-section main-container">
+    <!-- Dashboard Header -->
+    <div class="myreview-header">
+      <h1>My Review</h1>
+    </div>
+
+    <!-- Latest Reviews -->
+    <div class="block-card latest_review">
+      <!-- Loading -->
+      <div *ngIf="isLoading; else reviewsContent" class="flex-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+
+      <ng-template #reviewsContent>
+        <!-- When there are reviews -->
+        <div *ngIf="reviewedHomeowners && reviewedHomeowners.length > 0; else noReviews">
+          <div
+            class="review-card"
+            *ngFor="let review of reviewedHomeowners"
+            (click)="openReviewDetails(review.reviewid)"
+          >
+            <h5>{{ review.fname }} {{ review.lname }}</h5>
+            <p class="project-type"><strong>Type of Interaction: {{ review.projectType }}</strong></p>
+            <p>Date of Interaction {{ review.projectDate }}</p>
+
+            <div class="stars">
+              Overall Rating
+              <ion-icon
+                *ngFor="let s of [1, 2, 3, 4, 5]"
+                [name]="
+                  s <= review.avgScore
+                    ? 'star'
+                    : s - 0.5 <= review.avgScore
+                    ? 'star-half'
+                    : 'star-outline'
+                "
+                color="warning"
+              ></ion-icon>
+              <span> {{ review.avgScore }}/5</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+              <ion-button size="small" fill="outline" (click)="editReview(review, $event)">Edit</ion-button>
+              <ion-button size="small" color="danger" fill="outline" (click)="deleteReview(review, $event)">
+                Delete
+              </ion-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- When there are no reviews -->
+        <ng-template #noReviews>
+          <div class="no-reviews flex-center">
+            <ion-icon name="chatbubble-ellipses-outline" size="large"></ion-icon>
+            <p>No reviews yet. Once you post a review, it will appear here.</p>
+          </div>
+        </ng-template>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

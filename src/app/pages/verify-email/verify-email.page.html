@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar><ion-title>Email Verification</ion-title></ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ng-container [ngSwitch]="status">
+    <div *ngSwitchCase="'checking'">
+      <ion-spinner></ion-spinner>
+      <p>Checking your verification status…</p>
+    </div>
+    <div *ngSwitchCase="'verified'">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <h2>Verified!</h2>
+      <p>Redirecting to your profile…</p>
+    </div>
+    <div *ngSwitchCase="'failed'">
+      <ion-icon name="alert-circle"></ion-icon>
+      <h2>Couldn’t confirm your email.</h2>
+      <p>Try logging in or resend the verification email.</p>
+      <ion-button (click)="goLogin()">Go to Login</ion-button>
+    </div>
+  </ng-container>
+</ion-content>

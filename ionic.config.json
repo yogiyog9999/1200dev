@@ -1,0 +1,7 @@
+{
+  "name": "D-List",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

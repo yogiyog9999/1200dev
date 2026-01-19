@@ -1,0 +1,42 @@
+.list-ios { background:#fff; }
+ion-card { &:hover { transform:none; } }
+.consumer-search { --background:#fafafa; padding:12px; }
+.search-filters, .filters { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.filter-item { border:1px solid #ddd; border-radius:10px; --min-height:48px; --padding-start:10px; }
+.search-btn, .filters ion-button, .active-filters ion-button { --background:#ff5722; --border-radius:12px; margin-top:8px; font-weight:600; text-transform:none; }
+.section-title { margin:12px 0; font-size:1rem; font-weight:600; }
+.review-card { border-radius:10px; background:#fff4ef; margin:12px 0; border:none; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.15s ease; &:hover { transform:translateY(-2px); } h4,h2,h3,.hname { margin:0 0 4px 0; font-weight:600; color:#f15a29; font-size:1.0625rem; text-transform:capitalize; } p { margin:2px 0 10px; font-size:0.9rem; color:#474747; } .rating, .stars { display:flex; align-items:center; gap:4px; ion-icon { font-size:16px; } } }
+.card-content-ios { padding:0; }
+.search-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; h2 { font-size:1.125rem; font-weight:700; margin:0; color:#222; } ion-button { margin-left:8px; --color:#f15a29; --padding-start:0; --padding-end:0; font-size:16px; } ion-searchbar { flex:1; } .sc-ion-searchbar-ios-h{padding:0} }
+.active-filters { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; ion-chip { background:#fff4ef; --color:#f15a29; font-size:13px; border-radius:8px; ion-icon{color:#f15a29;cursor:pointer} } ion-button { --color:#f15a29; font-size:0.8rem; height:28px; margin-left:auto; } }
+.results-count { margin-bottom:8px; font-size:0.95rem; color:#555; p { margin:0; strong{color:#f15a29} } }
+.main-container { padding:16px; background:#fff; display:flex; flex-direction:column; gap:12px; }
+.view-toggle ion-segment { width:100%; ion-segment-button { flex:1; text-align:center; } }
+.map-container { position:relative; height:400px; width:100%; margin-bottom:12px; #reviewMap{height:100%; width:100%; border-radius:8px;} .map-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.7);display:flex;justify-content:center;align-items:center;font-size:1rem;font-weight:bold;color:#333;z-index:1000;} .map-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1010;} &.hidden{display:none;} }
+.spinner-center { display:flex; justify-content:center; align-items:center; margin:24px 0; --color:#f15a29; }
+.map-container {
+  height: 400px; /* or 100% if you want full height */
+  width: 100%;
+  position: relative;
+}
+.state-marker {
+  text-align: center;
+  color: #fff;
+  background: #f15a29;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.state-marker-content {
+  width: 50px;
+  height: 50px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.button-clear {
+    color: #5d5a5a;
+}

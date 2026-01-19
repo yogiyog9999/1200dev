@@ -1,0 +1,9 @@
+<ion-header><ion-toolbar><ion-title>Dashboard</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+<ion-card><ion-card-header><ion-card-title>Average Overall Rating</ion-card-title></ion-card-header>
+<ion-card-content><h2>{{ avgOverall | number:'1.1-2' }}</h2></ion-card-content></ion-card>
+<ion-list><ion-item *ngFor="let r of reviews" [routerLink]="['/review', r.id]"><ion-label>
+<h2>{{ r.homeowner_name }} — {{ r.project_type }}</h2><p>{{ r.address }}</p><p>Overall: {{ r.overall }} ★</p>
+</ion-label></ion-item></ion-list>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed"><ion-fab-button routerLink="/review-submit">+</ion-fab-button></ion-fab>
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+    </ion-item>
+
+    <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+
+    <ion-button expand="block" type="submit" [disabled]="loading">
+      <ion-spinner *ngIf="loading"></ion-spinner>
+      <span *ngIf="!loading">Login</span>
+    </ion-button>
+  </form>
+</ion-content>

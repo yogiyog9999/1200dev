@@ -1,0 +1,134 @@
+  .myreview-page {
+  --background: #fff;
+}
+
+.myreview-header {
+  text-align: center;
+  margin:0 0 16px 0;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .welcome-text {
+    color: #e65c2e; // same orange-red as screenshot
+    font-weight: 500;
+    margin-top: 4px;
+  }
+}
+
+/* Quick Actions */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 12px;
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #1a1a1a;   // black background like screenshot
+    color: #fff;           // white text
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.9rem;
+
+    ion-icon {
+      color: #ef6229;   // white icons
+      font-size: 18px;
+    }
+  }
+}
+
+/* Card-like blocks (Rating + Reviews) */
+.block-card {
+ 
+  /*border-radius: 12px;
+  padding: 14px;
+  margin: 16px 12px;*/
+}
+
+/* Section titles inside blocks */
+.section-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Rating Overview */
+.rating-overview p,
+.block-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+/* Latest Reviews */
+.review-card {
+  background: #FCE8CF; // peach block
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+
+  h5 {
+    margin: 0 0 10px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #e65c2e; // orange like screenshot
+  }
+
+  p {
+    margin: 3px 0;
+    font-size: 0.85rem;
+  }
+ p.project-type{}
+  .stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+
+    ion-icon {
+      font-size: 16px;
+    }
+
+    span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #444;
+    }
+  }
+}
+
+
+
+.block-card.latest_review .review-card {
+    border: 0px;
+    box-shadow: none;
+    /*border-bottom: 1px solid #e7d9d9;*/
+    border-radius: 10px; line-height: 1.8;
+}
+.no-reviews {
+  text-align: center;
+  padding: 40px 20px;
+  color: #777;
+  ion-icon {
+    display: block;
+    margin: 0 auto 10px;
+    color: var(--ion-color-medium);
+    font-size: 48px;
+  }
+  p {
+    font-size: 16px;
+  }
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
